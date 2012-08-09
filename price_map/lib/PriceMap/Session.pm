@@ -14,8 +14,9 @@ sub  signup {
 
     if ( my $res = $sth->fetchrow_hashref ) {
 			$self->flash( message => 'Sign up success!' );
-
-			$self->redirect_to('/');
+			
+			$self->login($user, $self->param('pass'));
+			$self->redirect_to('/welcome');
             #return $res;
         }
     else {
