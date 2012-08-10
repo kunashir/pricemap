@@ -10,13 +10,13 @@ sub  signup {
 	my $crypted_pass = $self->bcrypt( $self->param('pass') );
 	my $sth = $self->db->prepare('INSERT INTO user (user_name, user_passwd) VALUES (?, ?)');
 
-    $sth->execute($user, $crypted_pass);
+    if ($sth->execute($user, $crypted_pass)) {
 
-    if ( my $res = $sth->fetchrow_hashref ) {
+    #if ( my $res = $sth->fetchrow_hashref ) {
 			$self->flash( message => 'Sign up success!' );
 			
 			$self->login($user, $self->param('pass'));
-			$self->redirect_to('/welcome');
+			$self->redirect_to('/');
             #return $res;
         }
     else {
@@ -36,6 +36,14 @@ sub logout {
 
 };
 
+sub  login_form {
+	my $self = shift;
+};
+
+sub  signup_form {
+	my $self = shift;
+};
+
 sub  login {
 
     my $self = shift;
@@ -46,14 +54,14 @@ sub  login {
 
     if ( $self->authenticate( $user, $pass ) ) {
 
-        $self->redirect_to('/welcome');
+        $self->redirect_to('/');
 
     }
     else {
 
         $self->flash( message => 'Invalid credentials!' );
 
-        $self->redirect_to('/');
+        $self->redirect_to('/login_form');
 
     }
 

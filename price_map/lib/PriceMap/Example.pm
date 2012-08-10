@@ -4,6 +4,7 @@ use Mojo::Base 'Mojolicious::Controller';
 # This action will render a template
 sub welcome {
 	my $self = shift;
+	$self->redirect_to('/login') and return 0 unless($self->is_user_authenticated);
 	my $m = '';
 	if ( not $self->is_user_authenticated ) {
 

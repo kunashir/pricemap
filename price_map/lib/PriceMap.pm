@@ -1,3 +1,8 @@
+# Sample schema:
+# CREATE TABLE user (user_id integer primary key,
+# user_name varchar,
+# user_passwd varchar);
+#
 package PriceMap;
 use Mojo::Base 'Mojolicious';
 #use Mojolicious::Plugin::DigestAuth;
@@ -106,9 +111,11 @@ sub startup {
 
   # Normal route to controller
   $r->get('/')->to('example#welcome');
-  $r->get('/login')->to('session#login');
+  $r->get('/login_form')->to('session#login_form');
+  $r->any('/login')->to('session#login');
   $r->get('/logout')->to('session#logout');
   $r->get('/signup')->to('session#signup');
+  $r->get('/signup_form')->to('session#signup_form');
 }
 
 1;

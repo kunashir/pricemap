@@ -6,9 +6,11 @@
 		</title>
 		<link href="/blueprint/print.css" rel="stylesheet">
 		<link href="/blueprint/screen.css" rel="stylesheet">
+		<link href="/custom.css" rel="stylesheet">
 	</head>
   <body>
 	  <div class="container">
-		<%= content %></body>
+		<%= content %>
 	  </div>
+	</body>
 </html>
