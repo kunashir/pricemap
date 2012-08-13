@@ -11,6 +11,9 @@ use Mojolicious::Plugin::Bcrypt;
 use Mojolicious::Plugin::Database;
 use DBI;
 use Mojo::Upload;
+use Spreadsheet::ParseExcel;
+use Spreadsheet::ParseExcel::FmtUnicode;
+
 
 # This method will run once at server start
 sub startup {
@@ -119,6 +122,7 @@ sub startup {
   $r->get('/signup_form')->to('session#signup_form');
   $r->get('/upload_form')->to('analyzer#upload_form');
   $r->any('/upload')->to('analyzer#upload');
+  $r->any('/show_file')->to('analyzer#show_file');
 }
 
 1;

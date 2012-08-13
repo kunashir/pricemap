@@ -5,6 +5,67 @@ use Mojo::Base 'Mojolicious::Controller';
 
 my $IMAGE_BASE = '/uploads';
 
+
+sub parser_excel {
+
+    my $self    = shift;
+
+    print "paser work!";
+    my $filename = shift; # имя файла, который будем парсить
+    # Создаем объект-парсер
+    my $oExcel  = new Spreadsheet::ParseExcel;
+    # code page
+    my $oFmtR   = Spreadsheet::ParseExcel::FmtUnicode->new(Unicode_Map => "CP1251");
+    my $oBook   = $oExcel->Parse($filename, $oFmtR);
+    # choice sheet
+    my $oWks    = $oBook->{Worksheet}[0];
+    my $headr_find  = 0;
+
+    $self->session('price_map') = {}; #создадим в сессиях хеш 
+
+    for (my $i = 0; $i <= 20 ; $i++) #$oWks->{20}
+    {
+        my $is_header = 0;
+        for (my $j = 0; $j <= 20; $j++)
+        {
+            my $cur_val = $oWks->{Cells}[$i][$j];
+            if (!$headr_find && $cur_val)
+            {
+                $self->session('price_map')->{$cur_val} = [];
+                $is_header = 1;
+            }
+            elsif ($headr_find && $cur_val) 
+            {
+                #$self->session('price_map')->[$i] = $cur_val;
+            }
+        }
+        if ($is_header)
+        {
+            $headr_find = 1;
+
+        }
+
+    }
+};
+
+sub show_file {
+    print "show file work!";
+    my $self = shift;
+    my $tr = "<tr>";
+    my $end_tr = "</tr>";
+    my $td = "<td>";
+    my $end_td = "</td>";
+    my $dd = $tr + $td;
+    my @keys_hash = keys $self->session('price_map');
+    while ( my $key = each(@keys_hash)) {
+        $dd += $key + $end_td;
+    }
+    $dd += $end_tr;
+
+    $self->stash( data => $dd);
+
+}
+
 sub upload {
     my $self = shift;
 
@@ -63,8 +124,10 @@ sub upload {
     # Save to file
     $image->move_to($image_file);
     
+    $self->parser_excel($image_file);
+
     # Redirect to top page
-    $self->redirect_to('index');
+    $self->redirect_to('show_file');
 };
 
 sub upload_form {
