@@ -10,6 +10,7 @@ use Mojolicious::Plugin::Authentication;
 use Mojolicious::Plugin::Bcrypt;
 use Mojolicious::Plugin::Database;
 use DBI;
+use Mojo::Upload;
 
 # This method will run once at server start
 sub startup {
@@ -116,6 +117,8 @@ sub startup {
   $r->get('/logout')->to('session#logout');
   $r->get('/signup')->to('session#signup');
   $r->get('/signup_form')->to('session#signup_form');
+  $r->get('/upload_form')->to('analyzer#upload_form');
+  $r->any('/upload')->to('analyzer#upload');
 }
 
 1;

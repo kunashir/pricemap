@@ -1,0 +1,11 @@
+% layout 'default';
+% title 'Upload';
+<h1>Uploading file to analyze</h1>
+    <form method="post" action="<%= url_for('upload') %>" enctype ="multipart/form-data">
+      <div>
+        File name
+        <input type="file" name="image" >
+        <input type="submit" value="Upload" >
+      </div>
+    </form>
+<div>
