@@ -2,6 +2,11 @@ use strict;
 use warnings;
 package PriceMap::Analyzer;
 use Mojo::Base 'Mojolicious::Controller';
+use Data::Dumper;
+use Encode;
+use Lingua::DetectCharset;
+use Convert::Cyrillic;
+
 
 my $IMAGE_BASE = '/uploads';
 
@@ -16,27 +21,33 @@ sub parser_excel {
     my $oExcel  = new Spreadsheet::ParseExcel;
     # code page
     my $oFmtR   = Spreadsheet::ParseExcel::FmtUnicode->new(Unicode_Map => "CP1251");
+
     my $oBook   = $oExcel->Parse($filename, $oFmtR);
     # choice sheet
     my $oWks    = $oBook->{Worksheet}[0];
     my $headr_find  = 0;
 
-    $self->session('price_map') = {}; #создадим в сессиях хеш 
+    $self->session('price_map'=> {}); #создадим в сессиях хеш 
+
+    my %header_hash = ();
 
     for (my $i = 0; $i <= 20 ; $i++) #$oWks->{20}
     {
         my $is_header = 0;
-        for (my $j = 0; $j <= 20; $j++)
+        for (my $j = 0; $j <= 200; $j++)
         {
             my $cur_val = $oWks->{Cells}[$i][$j];
             if (!$headr_find && $cur_val)
             {
-                $self->session('price_map')->{$cur_val} = [];
+                #my $val = $cur_val->Value;
+                my $val = decode('cp1251', $cur_val->Value);
+                $header_hash{$j} = $val;
+                $self->session('price_map')->{$val} = [];
                 $is_header = 1;
             }
             elsif ($headr_find && $cur_val) 
             {
-                #$self->session('price_map')->[$i] = $cur_val;
+                 push $self->session('price_map')->{$header_hash{$j}}, $cur_val->Value;
             }
         }
         if ($is_header)
@@ -55,14 +66,23 @@ sub show_file {
     my $end_tr = "</tr>";
     my $td = "<td>";
     my $end_td = "</td>";
-    my $dd = $tr + $td;
+    my $dd = $tr;
+    #print Dumper $self->session('price_map');
     my @keys_hash = keys $self->session('price_map');
-    while ( my $key = each(@keys_hash)) {
-        $dd += $key + $end_td;
+    print Dumper @keys_hash;
+    foreach  my $key (@keys_hash) {
+        $dd .= $td.$key.$end_td;
     }
-    $dd += $end_tr;
 
-    $self->stash( data => $dd);
+    # for ((my $key, my $value) = each($self->session('price_map')))
+    # {
+    #     my $value = $self->session('price_map')->{$key};
+    #     $dd .= $td.$key.$end_td;
+    # }
+
+    $dd .= $end_tr;
+
+    $self->stash( data_table => $dd);
 
 }
 
@@ -117,9 +137,9 @@ sub upload {
     my $image_file = $full_path; #"$IMAGE_BASE/" . $image->filename;
     
     # If file is exists, Retry creating filename
-    while(-f $image_file){
-        $image_file = $full_path; #"$IMAGE_BASE/" . $image->filename;
-    }
+    #while(-f $image_file){
+    #    $image_file = $full_path; #"$IMAGE_BASE/" . $image->filename;
+    #}
     
     # Save to file
     $image->move_to($image_file);

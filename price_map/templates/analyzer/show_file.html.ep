@@ -2,6 +2,6 @@
 % title 'Show file';
 <h1>Uploading file to analyze</h1>
     <table>
-    <%= $data %>
+    <%== $data_table %>
     </table>
-<div> 
+
