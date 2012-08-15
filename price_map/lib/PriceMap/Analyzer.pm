@@ -27,27 +27,35 @@ sub parser_excel {
     my $oWks    = $oBook->{Worksheet}[0];
     my $headr_find  = 0;
 
-    $self->session('price_map'=> {}); #создадим в сессиях хеш 
+    $self->stash ( price_map=> []); #создадим в сессиях массив
 
     my %header_hash = ();
 
-    for (my $i = 0; $i <= 20 ; $i++) #$oWks->{20}
+    for (my $i = 0; $i <= $oWks->{MaxRow} ; $i++) #
     {
         my $is_header = 0;
-        for (my $j = 0; $j <= 200; $j++)
+        my $cur_row = {};
+        for (my $j = 0; $j <= 20; $j++)
         {
             my $cur_val = $oWks->{Cells}[$i][$j];
+            
+            if (!$cur_val)
+            {
+                next;
+            }
+            my $val = decode('cp1251', $cur_val->Value);
             if (!$headr_find && $cur_val)
             {
                 #my $val = $cur_val->Value;
-                my $val = decode('cp1251', $cur_val->Value);
+                
                 $header_hash{$j} = $val;
-                $self->session('price_map')->{$val} = [];
+                #$self->stash('price_map')->{$val} = [];
                 $is_header = 1;
             }
             elsif ($headr_find && $cur_val) 
             {
-                 push $self->session('price_map')->{$header_hash{$j}}, $cur_val->Value;
+                 #push $self->stash('price_map')->{$header_hash{$j}}, $cur_val->Value;
+                 $cur_row->{$header_hash{$j}} = $val;
             }
         }
         if ($is_header)
@@ -55,28 +63,51 @@ sub parser_excel {
             $headr_find = 1;
 
         }
+        push $self->stash->(price_map), $cur_row;
 
     }
+    #
 };
 
 sub show_file {
-    print "show file work!";
+    
+    #print "show file work!";
     my $self = shift;
+
+    my $arr = $self->stash->('price_map');
+    #print Dumper $arr;
+    print Dumper $self->stash->('price_map');
     my $tr = "<tr>";
     my $end_tr = "</tr>";
     my $td = "<td>";
     my $end_td = "</td>";
     my $dd = $tr;
-    #print Dumper $self->session('price_map');
-    my @keys_hash = keys $self->session('price_map');
-    print Dumper @keys_hash;
-    foreach  my $key (@keys_hash) {
+    #print Dumper $self->stash('price_map');
+    my $keys_hash = $self->stash->('price_map')->[1];
+    print Dumper $keys_hash;
+    foreach  my $key (keys %$keys_hash) {
         $dd .= $td.$key.$end_td;
     }
 
-    # for ((my $key, my $value) = each($self->session('price_map')))
+
+    #for ( my $i = 0; $i <= $#{$self->stash('price_map')}; $i++) { # Сделать что-то с
+    #    $dd .= $td.$self->stash->[$i].$end_td;
+    #}
+    for my $href ($self->stash('price_map'))
+    {
+        for my $item (keys $href)
+        {
+            $dd .= $td.$item.$end_td;      
+        }
+    }
+
+
+    #while(( my $key, my $value) = each $self->stash('price_map')){
+    #    $dd .=
+    #};
+    # for ((my $key, my $value) = each($self->stash('price_map')))
     # {
-    #     my $value = $self->session('price_map')->{$key};
+    #     my $value = $self->stash('price_map')->{$key};
     #     $dd .= $td.$key.$end_td;
     # }
 
