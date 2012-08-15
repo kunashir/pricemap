@@ -4,8 +4,8 @@ package PriceMap::Analyzer;
 use Mojo::Base 'Mojolicious::Controller';
 use Data::Dumper;
 use Encode;
-use Lingua::DetectCharset;
-use Convert::Cyrillic;
+#use Lingua::DetectCharset;
+#use Convert::Cyrillic;
 
 
 my $IMAGE_BASE = '/uploads';
@@ -63,28 +63,31 @@ sub parser_excel {
             $headr_find = 1;
 
         }
-        push $self->stash->(price_map), $cur_row;
+        push $self->stash->{price_map}, $cur_row;
 
     }
-    #
+    #print Dumper $self->stash->{'price_map'};
+    my $foo = $self->stash('xx');
+    $foo = 'fififi';
+
 };
 
 sub show_file {
     
     #print "show file work!";
     my $self = shift;
-
-    my $arr = $self->stash->('price_map');
+	print $self->stash->{'xx'};
+    my $arr = $self->stash->{'price_map'};
     #print Dumper $arr;
-    print Dumper $self->stash->('price_map');
+    print Dumper $self->stash->{'price_map'};
     my $tr = "<tr>";
     my $end_tr = "</tr>";
     my $td = "<td>";
     my $end_td = "</td>";
     my $dd = $tr;
     #print Dumper $self->stash('price_map');
-    my $keys_hash = $self->stash->('price_map')->[1];
-    print Dumper $keys_hash;
+    my $keys_hash = $self->stash->{'price_map'}->[1];
+   # print Dumper $keys_hash;
     foreach  my $key (keys %$keys_hash) {
         $dd .= $td.$key.$end_td;
     }
@@ -93,7 +96,7 @@ sub show_file {
     #for ( my $i = 0; $i <= $#{$self->stash('price_map')}; $i++) { # Сделать что-то с
     #    $dd .= $td.$self->stash->[$i].$end_td;
     #}
-    for my $href ($self->stash('price_map'))
+    for my $href ($self->stash->{'price_map'})
     {
         for my $item (keys $href)
         {
