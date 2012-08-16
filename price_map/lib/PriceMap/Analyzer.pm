@@ -98,7 +98,7 @@ sub show_file {
     #    $dd .= $td.$self->stash->[$i].$end_td;
     #}
     print Dumper $arr;
-    for my $href ($arr)
+    for my $href (@$arr)
     {
         $dd .= $tr;
         print $href;
