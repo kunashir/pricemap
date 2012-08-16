@@ -27,9 +27,10 @@ sub parser_excel {
     my $oWks    = $oBook->{Worksheet}[0];
     my $headr_find  = 0;
 
-    $self->stash ( price_map=> []); #создадим в сессиях массив
+    my $s = $self->app->session;
 
-    my %header_hash = ();
+    my $my_data = [];
+    my %header_hash = {};
 
     for (my $i = 0; $i <= $oWks->{MaxRow} ; $i++) #
     {
@@ -63,30 +64,30 @@ sub parser_excel {
             $headr_find = 1;
 
         }
-        push $self->stash->{price_map}, $cur_row;
+        push $my_data, $cur_row;
 
     }
     #print Dumper $self->stash->{'price_map'};
-    my $foo = $self->stash('xx');
-    $foo = 'fififi';
-
+   # print Dumper $my_data;#$s->data('price_map');
+    $s->data('price_map', $my_data);
+    $s->flush;
 };
 
 sub show_file {
     
     #print "show file work!";
     my $self = shift;
-	print $self->stash->{'xx'};
-    my $arr = $self->stash->{'price_map'};
+    my $s = $self->app->session;
+    #print Dumper $s->data('price_map');
     #print Dumper $arr;
-    print Dumper $self->stash->{'price_map'};
+    my $arr = $s->data('price_map');
     my $tr = "<tr>";
     my $end_tr = "</tr>";
     my $td = "<td>";
     my $end_td = "</td>";
     my $dd = $tr;
     #print Dumper $self->stash('price_map');
-    my $keys_hash = $self->stash->{'price_map'}->[1];
+    my $keys_hash = $arr->[1];
    # print Dumper $keys_hash;
     foreach  my $key (keys %$keys_hash) {
         $dd .= $td.$key.$end_td;
@@ -96,12 +97,17 @@ sub show_file {
     #for ( my $i = 0; $i <= $#{$self->stash('price_map')}; $i++) { # Сделать что-то с
     #    $dd .= $td.$self->stash->[$i].$end_td;
     #}
-    for my $href ($self->stash->{'price_map'})
+    print Dumper $arr;
+    for my $href ($arr)
     {
+        $dd .= $tr;
+        print $href;
         for my $item (keys $href)
         {
-            $dd .= $td.$item.$end_td;      
+            my $val = $href->{$item};
+            $dd .= $td.$val.$end_td;      
         }
+        $dd .= $end_tr;
     }
 
 

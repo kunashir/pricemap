@@ -13,11 +13,40 @@ use DBI;
 use Mojo::Upload;
 use Spreadsheet::ParseExcel;
 use Spreadsheet::ParseExcel::FmtUnicode;
+use MojoX::Session;
+use MojoX::Session::Store::Dbi;
+use MojoX::Session::Store::File;
+
+#Singleton Mojox::Session
+my $_session;
+
+sub session{
+
+  my $app = shift;
+  $Storable::Deparse = $Storable::Eval = 1; 
+  unless(defined $_session)
+  {
+    $_session = MojoX::Session->new(
+      #store     => MojoX::Session::Store::Dbi->new(dbh  => My::DB->new->dbh),
+      store     => MojoX::Session::Store::File->new( dir => File::Spec->catfile($app->home, 'data' , 'session')), 
+      #store     => Life25::MojoX::Session::Store::Dummy->new,
+      transport => MojoX::Session::Transport::Cookie->new,
+      ip_match  => 1,
+      expires_delta => 3600,
+      
+    );
+    $_session->expires(3600);
+  }
+
+  return $_session;
+}
+
 
 
 # This method will run once at server start
 sub startup {
   my $self = shift;
+  $self->secret("sEcrEt"); 
   #$self->plugin('digest_auth', allow => {'Admin' => {sshaw => 'mu_pass'}});
   # Documentation browser under "/perldoc"
   $self->plugin('PODRenderer');
@@ -123,6 +152,45 @@ sub startup {
   $r->get('/upload_form')->to('analyzer#upload_form');
   $r->any('/upload')->to('analyzer#upload');
   $r->any('/show_file')->to('analyzer#show_file');
+
+
+  #Set server-storable session
+  $self->hook(before_dispatch => sub {
+    my $c = shift;
+
+    #$c->stash('Mii.started' => time);
+
+
+    my $s = $c->app->session;   
+
+    $s->tx($c->tx);
+
+    $s->create unless $s->load;
+    
+    $c->app->log->info('----------- sid = '. $s->sid . ' path = ' . $c->req->url);
+    
+    $s->extend_expires; 
+    $s->flush;
+
+    ##return if $c->stash('mojo.static');
+    ###return if $c->req->content->headers->content_type !~ /html/i;
+    ###return unless defined $c->res->dom->at('html');
+
+
+
+    ##my $key = sha1_sum($c->req->url->to_abs);
+
+    ##$DB::single = 1;
+
+    ##if(defined (my $val = $c->app->cache->get($key)))
+    ##{
+      ##$c->stash('Mii.cached' => 1);
+      ##$c->render_data($val);
+
+     ##}
+     ##my $tst = 1;
+
+  });
 }
 
 1;
