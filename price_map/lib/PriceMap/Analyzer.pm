@@ -6,10 +6,24 @@ use Data::Dumper;
 use Encode;
 #use Lingua::DetectCharset;
 #use Convert::Cyrillic;
-
+use encoding 'utf8'; #чтобы текст понимался русский
+use utf8;
 
 my $IMAGE_BASE = '/uploads';
 
+#Формирование данных прайсов в формате json для
+#jqGride. Формат ответа:
+#Хеш вида: {
+#            page => 1,
+#            total => 1,
+#            records => scalar keys $list,
+#            rows => $list }
+# причем $list - это тоже хеш { id => '', row => [это уже массив со значениями]]}
+#
+#
+sub get_data {
+
+};
 
 sub parser_excel {
 
@@ -25,16 +39,17 @@ sub parser_excel {
     my $oBook   = $oExcel->Parse($filename, $oFmtR);
     # choice sheet
     my $oWks    = $oBook->{Worksheet}[0];
-    my $headr_find  = 0;
-
-    my $s = $self->app->session;
-
+    my $headr_find      = 0;
+    
     my $my_data = [];
-    my %header_hash = {};
+    my %header_hash = ();
 
+    my $find_row_nom    = 0;
+    my $find_row_price  = 0;
     for (my $i = 0; $i <= $oWks->{MaxRow} ; $i++) #
     {
         my $is_header = 0;
+        
         my $cur_row = {};
         for (my $j = 0; $j <= 20; $j++)
         {
@@ -48,10 +63,23 @@ sub parser_excel {
             if (!$headr_find && $cur_val)
             {
                 #my $val = $cur_val->Value;
-                
-                $header_hash{$j} = $val;
+                #print $val;
+                if ($val =~ m/(Наимен|Номенклат)/i)
+                {
+                    $find_row_nom = 1;
+                    $header_hash{$j} = "Наименование";
+                }
+                if ($val =~ m/Цена/i)
+                {
+                    $find_row_price = 1;
+                    $header_hash{$j} = "Цена";
+                }
+                $header_hash{$j} = "Производитель" if ($val =~ m/Фирма|Производитель/i);
+                $header_hash{$j} = "Артикл/код" if ($val =~ m/Код|Артикл/i);
+                #$header_hash{$j} = $val;
                 #$self->stash('price_map')->{$val} = [];
-                $is_header = 1;
+                #$is_header = 1;
+
             }
             elsif ($headr_find && $cur_val) 
             {
@@ -59,16 +87,30 @@ sub parser_excel {
                  $cur_row->{$header_hash{$j}} = $val;
             }
         }
-        if ($is_header)
+        #если в строке нашли столбец с упоминанием "номенклатруа" или "наименование" и цена
+        #считаем что нашли шапку таблицы
+        if ($find_row_nom && $find_row_price) 
         {
             $headr_find = 1;
 
         }
-        push $my_data, $cur_row;
+        else
+        {
+            $find_row_nom    = 0;
+            $find_row_price  = 0;
+            #%header_hash = undef;
+            %header_hash = ();
+        }
+
+        if ($headr_find)
+        {
+            push $my_data, $cur_row;
+        }
 
     }
     #print Dumper $self->stash->{'price_map'};
-   # print Dumper $my_data;#$s->data('price_map');
+    # print Dumper $my_data;#$s->data('price_map');
+    my $s = $self->app->session;
     $s->data('price_map', $my_data);
     $s->flush;
 };
