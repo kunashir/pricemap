@@ -152,7 +152,7 @@ sub startup {
   $r->get('/upload_form')->to('analyzer#upload_form');
   $r->any('/upload')->to('analyzer#upload');
   $r->any('/show_file')->to('analyzer#show_file');
-
+  $r->any('/get_data')->to('analyzer#get_data');
 
   #Set server-storable session
   $self->hook(before_dispatch => sub {

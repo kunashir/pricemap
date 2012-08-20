@@ -22,6 +22,55 @@ my $IMAGE_BASE = '/uploads';
 #
 #
 sub get_data {
+    my $self = shift;
+    print '=========================GET_DATA work===============================';
+    my $GET = $self->req->body_params->to_hash();
+    my $POST = $self->req->query_params->to_hash();
+    my $params;
+    if ($GET)
+    {
+        $params = $GET;
+    }
+    else
+    {
+        $params = $POST;
+    }
+    my $page = $params->{'page'} || 1; # get the requested page 
+    my $limit = $params->{'rows'}|| 20; # get how many rows we want to have into the grid 
+    my $sidx = $params->{'sidx'}; # get index row - i.e. user click to sort 
+    my $sord = $params->{'sord'}; # get the direction
+
+    my $s = $self->app->session;
+    my $arr = $s->data('price_map');
+
+    my $total_pages = 10;
+    my $records = scalar @$arr;
+    print "limit->", $limit;
+    if( $limit ) 
+    { 
+        $total_pages = (scalar @$arr)/($limit); 
+    } 
+    my $result = {page => $page, total => $total_pages, records => $records};
+    my $rows = [];
+    my $i = 0;
+    for my $href (@$arr)
+    {
+        $i++;
+        my @cur_arr = ();
+        for my $item (keys $href)
+        {
+             push @cur_arr, $href->{$item};
+            
+        }
+        push $rows, {'id' => $i, 'cell' => \@cur_arr};
+    }
+    $result->{'rows'} = $rows;
+
+    print  Dumper $result;
+    $self->render(
+       json => $result
+    );
+
 
 };
 
@@ -139,11 +188,11 @@ sub show_file {
     #for ( my $i = 0; $i <= $#{$self->stash('price_map')}; $i++) { # Сделать что-то с
     #    $dd .= $td.$self->stash->[$i].$end_td;
     #}
-    print Dumper $arr;
+   # print Dumper $arr;
     for my $href (@$arr)
     {
         $dd .= $tr;
-        print $href;
+    #    print $href;
         for my $item (keys $href)
         {
             my $val = $href->{$item};
@@ -164,7 +213,7 @@ sub show_file {
 
     $dd .= $end_tr;
 
-    $self->stash( data_table => $dd);
+    $self->stash( data_table => '');
 
 }
 

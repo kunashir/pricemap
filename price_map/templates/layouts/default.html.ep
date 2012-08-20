@@ -4,14 +4,16 @@
 		<title>
 		  <%= title %>
 		</title>
-		<link href="/blueprint/print.css" rel="stylesheet">
+		 <!-- <link href="/blueprint/print.css" rel="stylesheet">
 		<link href="/blueprint/screen.css" rel="stylesheet">
-		<link href="/custom.css" rel="stylesheet">
+		-->
 		<script src="/assets/js/jquery-1.8.0.min.js" type="text/javascript"></script>
 		    <!-- jqGrid -->
-	    <link rel="stylesheet" type="text/css" media="screen" href="/public/jqgrid/css/ui.jqgrid.css" />
+	    <link rel="stylesheet" type="text/css" media="screen" href="/jqgrid/css/ui.jqgrid.css" mce_href="css/ui.jqgrid.css" />
 	    <script src="/jqgrid/js/i18n/grid.locale-ru.js" type="text/javascript"></script>
 	    <script src="/jqgrid/js/jquery.jqGrid.min.js" type="text/javascript"></script> 
+	    <link rel="stylesheet" type="text/css" media="screen" href="jquery-ui-1.8.23.custom.css" />
+		
 	    <!-- jqGrid -->
 	    <script src="/assets/js/application.js" type="text/javascript"></script>
 	</head>
@@ -19,6 +21,6 @@
 	  <div class="container">
 		<%= content %>
 	  </div>
-	  <table id="list4"></table>
+
 	</body>
 </html>
