@@ -24,16 +24,16 @@ my $IMAGE_BASE = '/uploads';
 sub get_data {
     my $self = shift;
     print '=========================GET_DATA work===============================';
-    my $GET = $self->req->body_params->to_hash();
-    my $POST = $self->req->query_params->to_hash();
+    my $POST = $self->req->body_params->to_hash();
+    my $GET = $self->req->query_params->to_hash();
     my $params;
-    if ($GET)
-    {
+    print Dumper $GET;
+    if (scalar keys $GET > 0) {
         $params = $GET;
-    }
-    else
-    {
+    } elsif (scalar keys $POST > 0) {
         $params = $POST;
+    } else {
+        $params = {};
     }
     my $page = $params->{'page'} || 1; # get the requested page 
     my $limit = $params->{'rows'}|| 20; # get how many rows we want to have into the grid 
@@ -48,14 +48,17 @@ sub get_data {
     print "limit->", $limit;
     if( $limit ) 
     { 
-        $total_pages = (scalar @$arr)/($limit); 
+        $total_pages = int((scalar @$arr)/($limit)); 
     } 
+    my $start_index = ($page -1 )*$limit;
+    my $end_index = $page*$limit;
     my $result = {page => $page, total => $total_pages, records => $records};
     my $rows = [];
     my $i = 0;
-    for my $href (@$arr)
+    #for my $href (@$arr)
+    for ( my $i = $start_index + 1; $i <= $end_index; $i++ )
     {
-        $i++;
+        my $href = $arr->[$i];
         my @cur_arr = ();
         for my $item (keys $href)
         {
