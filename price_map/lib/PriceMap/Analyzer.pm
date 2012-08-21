@@ -60,16 +60,16 @@ sub get_data {
     {
         my $href = $arr->[$i];
         my @cur_arr = ();
-        for my $item (keys $href)
-        {
-             push @cur_arr, $href->{$item};
+        # for my $item (keys $href)
+        # {
+        #      push @cur_arr, $href->{$item};
             
-        }
-        push $rows, {'id' => $i, 'cell' => \@cur_arr};
+        # }
+        push $rows,  $href;#\@cur_arr};
     }
     $result->{'rows'} = $rows;
 
-    #print  Dumper $result;
+    print  Dumper $result;
     $self->render(
        json => $result
     );
@@ -119,15 +119,15 @@ sub parser_excel {
                 if ($val =~ m/(Наимен|Номенклат|Товар)/i)
                 {
                     $find_row_nom = 1;
-                    $header_hash{$j} = "Наименование";
+                    $header_hash{$j} = "name";
                 }
                 if ($val =~ m/Цена/i)
                 {
                     $find_row_price = 1;
-                    $header_hash{$j} = "Цена";
+                    $header_hash{$j} = "price";
                 }
-                $header_hash{$j} = "Производитель" if ($val =~ m/Фирма|Производитель/i);
-                $header_hash{$j} = "Артикл/код" if ($val =~ m/Код|Артикл/i);
+                $header_hash{$j} = "manufact" if ($val =~ m/(Фирма|Производитель)/i);
+                $header_hash{$j} = "art" if ($val =~ m/(Код|Артикл)/i);
                 #$header_hash{$j} = $val;
                 #$self->stash('price_map')->{$val} = [];
                 #$is_header = 1;
@@ -136,7 +136,10 @@ sub parser_excel {
             elsif ($headr_find && $cur_val) 
             {
                  #push $self->stash('price_map')->{$header_hash{$j}}, $cur_val->Value;
-                 $cur_row->{$header_hash{$j}} = $val;
+                if (defined $header_hash{$j})
+                {
+                    $cur_row->{$header_hash{$j}} = $val;
+                }
             }
         }
         #если в строке нашли столбец с упоминанием "номенклатруа" или "наименование" и цена
