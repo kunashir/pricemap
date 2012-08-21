@@ -7,7 +7,8 @@
 				 	{ 
 				 		url:'get_data', 
 				 		datatype: "json",
-				 		height: 250, 
+				 		height: 550, 
+				 		width: 700,
 				 		colNames:['Артикл','Наименование', 'Производитель', 'Цена','Контрагент'], 
 				 		colModel:[ 
 				 			{name:'art',		index:'art', 		width:60, sorttype:"int"}, 
@@ -19,13 +20,14 @@
 				 		rowNum:10, 
 				 		rowList:[10,20,30], 
 				 		pager: '#pager2', 
-				 		sortname: 'id', 
+				 		sortname: 'art', 
 				 		viewrecords: true, 
 				 		sortorder: "desc", 
+				 		repetable: "false", 
 				 		caption:"JSON Example"
 				 	}
 				 		
 				); 
- 				jQuery("#list2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false}); 
+ 				jQuery("#list4").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false}); 
  			}
  		); })(jQuery);
