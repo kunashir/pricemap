@@ -27,7 +27,7 @@ sub get_data {
     my $POST = $self->req->body_params->to_hash();
     my $GET = $self->req->query_params->to_hash();
     my $params;
-    print Dumper $GET;
+   # print Dumper $GET;
     if (scalar keys $GET > 0) {
         $params = $GET;
     } elsif (scalar keys $POST > 0) {
@@ -69,7 +69,7 @@ sub get_data {
     }
     $result->{'rows'} = $rows;
 
-    print  Dumper $result;
+    #print  Dumper $result;
     $self->render(
        json => $result
     );
@@ -116,7 +116,7 @@ sub parser_excel {
             {
                 #my $val = $cur_val->Value;
                 #print $val;
-                if ($val =~ m/(Наимен|Номенклат)/i)
+                if ($val =~ m/(Наимен|Номенклат|Товар)/i)
                 {
                     $find_row_nom = 1;
                     $header_hash{$j} = "Наименование";

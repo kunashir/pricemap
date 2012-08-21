@@ -17,8 +17,8 @@
 				 			{name:'price',		index:'price', 	width:80, align:"right",sorttype:"float"},
 				 			{name:'contra',		index:'contra', 		width:80, align:"right",sorttype:"float"}
 				 			],
-				 		rowNum:10, 
-				 		rowList:[10,20,30], 
+				 		rowNum:1000, 
+				 		rowList:[1000,2000,3000], 
 				 		pager: '#pager2', 
 				 		sortname: 'art', 
 				 		viewrecords: true, 
