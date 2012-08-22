@@ -26,10 +26,10 @@
 				 		viewrecords: true, 
 				 		sortorder: "desc", 
 				 		jsonReader: {
-				 			repeatable: false, 
+				 			repeatitems: false, 
 				 			root : "rows",
 				 			page : "page",
-				 			total: "totalpages",
+				 			total: "total",
 				 			records : "records",
 				 			id 		: "0"
 				 		},				 		
