@@ -40,3 +40,30 @@
  				jQuery("#list4").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false}); 
  			}
  		); })(jQuery);
+
+var timeoutHnd;
+var flAuto = false;
+
+
+function gridReload()
+{
+	var nm_mask = jQuery("#item_nm").val();
+	var cd_mask	= jQuery("#search_cd").val();
+	jQuery("#list4").jqGrid('setGridParam', {url:"get_data?nm_mask="+nm_mask+"&cd_mask="+cd_mask,page:1}).trigger("reloadGrid");
+}
+
+function enableAutosubmit(state)
+{
+	flAuto = state;
+	jQuery("#submitButton").attr("disabled", state);
+}
+
+function doSearch(ev)
+{
+	if(!flAuto)
+		return;
+	if(timeoutHnd)
+		clearTimeout(timeoutHnd);
+	timeoutHnd = setTimeout(gridReload, 500);
+}
+

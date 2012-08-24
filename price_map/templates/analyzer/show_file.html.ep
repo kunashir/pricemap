@@ -1,8 +1,13 @@
 % layout 'default';
 % title 'Show file';
 <h1>Uploading file to analyze</h1>
-    <table>
-    <%== $data_table %>
-    </table>
+<div> Поиск:</div>
+<div><input="text" id="search_cd" onkeydown="doSearch(arguments[0]||event)"/> </div>
+<div>
+	Наименование<br /> <input type="text" id="item" onkeydown="doSearch(arguments[0]||event)"/>
+	<button onclick="gridReload()" id="submitButton" style="margin-left:30px;">Поиск</button>
+</div>
+<br />
+
 <table id="list4"></table>
-	  <div id="pager2"></div> 
+<div id="pager2"></div> 
