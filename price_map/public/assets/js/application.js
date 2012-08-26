@@ -47,7 +47,7 @@ var flAuto = false;
 
 function gridReload()
 {
-	var nm_mask = jQuery("#item_nm").val();
+	var nm_mask = jQuery("#item").val();
 	var cd_mask	= jQuery("#search_cd").val();
 	jQuery("#list4").jqGrid('setGridParam', {url:"get_data?nm_mask="+nm_mask+"&cd_mask="+cd_mask,page:1}).trigger("reloadGrid");
 }

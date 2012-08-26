@@ -35,6 +35,16 @@ sub get_data {
     } else {
         $params = {};
     }
+    my $nm_mask = "";
+    if ($params->{'nm_mask'})
+    {
+        $nm_mask = $params->{'nm_mask'};
+    }
+    my $cd_mask = "";
+    if ($params->{'cd_mask'})
+    {
+        $cd_mask = $params->{'cd_mask'};
+    }
     my $page = $params->{'page'} || 1; # get the requested page 
     my $limit = $params->{'rows'}|| 20; # get how many rows we want to have into the grid 
     my $sidx = $params->{'sidx'}; # get index row - i.e. user click to sort 
@@ -55,21 +65,35 @@ sub get_data {
     my $result = {page => $page, total => $total_pages, records => $records};
     my $rows = [];
     my $i = 0;
-    #for my $href (@$arr)
+    #for my $href (@$arr)'
+    print "nm_mask=", $nm_mask;
     for ( my $i = $start_index + 1; $i <= $end_index; $i++ )
     {
         my $href = $arr->[$i];
         my @cur_arr = ();
+        if ( $nm_mask ne "")
+        {
+            if ( $href->{name} =~ $nm_mask)
+            {
+                #если значение удолетворяет маске, то добавим в выборку
+                push $rows,  $href;#\@cur_arr};
+            }
+            
+        }
+        else
+        {
+            push $rows,  $href;#\@cur_arr};
+        }
         # for my $item (keys $href)
         # {
         #      push @cur_arr, $href->{$item};
             
         # }
-        push $rows,  $href;#\@cur_arr};
+        #push $rows,  $href;#\@cur_arr};
     }
     $result->{'rows'} = $rows;
 
-    print  Dumper $result;
+    #print  Dumper $result;
     $self->render(
        json => $result
     );
