@@ -53,45 +53,46 @@ sub get_data {
     my $s = $self->app->session;
     my $arr = $s->data('price_map');
 
-    my $total_pages = 10;
-    my $records = scalar @$arr;
-    print "limit->", $limit;
-    if( $limit ) 
-    { 
-        $total_pages = int((scalar @$arr)/($limit)); 
-    } 
-    my $start_index = ($page -1 )*$limit;
-    my $end_index = $page*$limit;
-    my $result = {page => $page, total => $total_pages, records => $records};
+    
     my $rows = [];
     my $i = 0;
     #for my $href (@$arr)'
+    my $total_records = scalar @$arr;
+    print "total rec=",$total_records;
     print "nm_mask=", $nm_mask;
-    for ( my $i = $start_index + 1; $i <= $end_index; $i++ )
+    if ( $nm_mask ne "")
     {
-        my $href = $arr->[$i];
-        my @cur_arr = ();
-        if ( $nm_mask ne "")
+        for ( my $i = $0; $i <= $total_records ; $i++ )
         {
-            if ( $href->{name} =~ $nm_mask)
-            {
-                #если значение удолетворяет маске, то добавим в выборку
-                push $rows,  $href;#\@cur_arr};
-            }
+            my $href = $arr->[$i];
+            #my @cur_arr = ();
             
+                if ( $href->{name} =~ $nm_mask)
+                {
+                    #если значение удолетворяет маске, то добавим в выборку
+                    push $rows,  $href;#\@cur_arr};
+                }
+                
         }
-        else
-        {
-            push $rows,  $href;#\@cur_arr};
-        }
-        # for my $item (keys $href)
-        # {
-        #      push @cur_arr, $href->{$item};
-            
-        # }
-        #push $rows,  $href;#\@cur_arr};
+        
     }
-    $result->{'rows'} = $rows;
+    else #если нет фильтра, тогда все что есть возвращаем
+    {
+        $rows = $arr;
+    }
+    my $total_pages = 10;
+    my $records = scalar @$rows;
+    print "limit->", $limit;
+    if( $limit ) 
+    { 
+        $total_pages = int((scalar @$rows)/($limit)); 
+    } 
+    my $start_index = ($page -1 )*$limit;
+    my $end_index = $page*$limit;
+    my $result = {page => $page, total => $total_pages, records => $records };#, rows => @$rows[$start_index..$end_index]};
+
+
+    $result->{'rows'} = @$rows[$start_index..$end_index];
 
     #print  Dumper $result;
     $self->render(
