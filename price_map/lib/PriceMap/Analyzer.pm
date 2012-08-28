@@ -62,12 +62,12 @@ sub get_data {
     print "nm_mask=", $nm_mask;
     if ( $nm_mask ne "")
     {
-        for ( my $i = $0; $i <= $total_records ; $i++ )
+        for ( my $i = 0; $i <= $total_records ; $i++ )
         {
             my $href = $arr->[$i];
             #my @cur_arr = ();
             
-                if ( $href->{name} =~ $nm_mask)
+                if ( $href->{name} =~ m/$nm_mask/i)
                 {
                     #если значение удолетворяет маске, то добавим в выборку
                     push $rows,  $href;#\@cur_arr};
@@ -80,21 +80,33 @@ sub get_data {
     {
         $rows = $arr;
     }
+    print "ROWS====================>";
+    print Dumper $rows;
     my $total_pages = 10;
     my $records = scalar @$rows;
     print "limit->", $limit;
     if( $limit ) 
     { 
-        $total_pages = int((scalar @$rows)/($limit)); 
+        $total_pages = int((scalar @$rows)/($limit)) || 1; 
     } 
     my $start_index = ($page -1 )*$limit;
     my $end_index = $page*$limit;
+    if ($records <= $end_index)
+    {
+        $end_index = $records - 1;
+    }
     my $result = {page => $page, total => $total_pages, records => $records };#, rows => @$rows[$start_index..$end_index]};
 
 
-    $result->{'rows'} = @$rows[$start_index..$end_index];
+    my @section = @$rows[${start_index}..${end_index}];
 
-    #print  Dumper $result;
+    print Dumper "sec=", @section;
+    $result->{rows} = [@section];
+    print "start index =",$start_index;
+    print "end index =",$end_index;
+    print "RESULT====================>";
+    print  Dumper $result;
+
     $self->render(
        json => $result
     );
