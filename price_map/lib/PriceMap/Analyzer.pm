@@ -120,6 +120,7 @@ sub parser_excel {
 
     print "paser work!";
     my $filename = shift; # имя файла, который будем парсить
+    my $contra = shift; #имя контрагента чей файл грузим, его тоже положим в данные
     # Создаем объект-парсер
     my $oExcel  = new Spreadsheet::ParseExcel;
     # code page
@@ -196,6 +197,7 @@ sub parser_excel {
 
         if ($headr_find)
         {
+            $cur_row->{contra} = $contra;
             push $my_data, $cur_row;
         }
 
@@ -244,16 +246,6 @@ sub show_file {
         $dd .= $end_tr;
     }
 
-
-    #while(( my $key, my $value) = each $self->stash('price_map')){
-    #    $dd .=
-    #};
-    # for ((my $key, my $value) = each($self->stash('price_map')))
-    # {
-    #     my $value = $self->stash('price_map')->{$key};
-    #     $dd .= $td.$key.$end_td;
-    # }
-
     $dd .= $end_tr;
 
     $self->stash( data_table => '');
@@ -265,7 +257,7 @@ sub upload {
 
     # Uploaded image(Mojo::Upload object)
     my $image = $self->req->upload('image');
-    
+    my $contra = $self->req->body_params->to_hash->{contra};
     # Not upload
     unless ($image) {
         return $self->render(
@@ -273,35 +265,7 @@ sub upload {
             message  => "Upload fail. File is not specified."
         );
     }
-    
-    # Upload max size
-    #my $upload_max_size = 3 * 1024 * 1024;
-    
-    # Over max size
-    #if ($image->size > $upload_max_size) {
-    #    return $self->render(
-    #        template => 'error',
-     #       message  => "Upload fail. Image size is too large."
-     #   );
-    #}
-    
-    # Check file type
-    #my $image_type = $image->headers->content_type;
-    #my %valid_types = map {$_ => 1} qw(image/gif image/jpeg image/png);
-    
-    ## Content type is wrong
-    #unless ($valid_types{$image_type}) {
-        #return $self->render(
-            #template => 'error',
-            #message  => "Upload fail. Content type is wrong."
-        #);
-    #}
-    
-    # Extention
-    #my $exts = {'image/gif' => 'gif', 'image/jpeg' => 'jpg',
-                #'image/png' => 'png'};
-    #my $ext = $exts->{$image_type};
-    
+
     # Image file
     my $full_path = "uploads/".$image->filename;
 	print $full_path;
@@ -318,7 +282,7 @@ sub upload {
     # Save to file
     $image->move_to($image_file);
     
-    $self->parser_excel($image_file);
+    $self->parser_excel($image_file, $contra);
 
     # Redirect to top page
     $self->redirect_to('show_file');

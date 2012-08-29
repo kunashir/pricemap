@@ -10,12 +10,13 @@
 				 		height: 550, 
 				 		width: 700,
 				 		//colNames:['Артикл','Наименование', 'Производитель', 'Цена','Контрагент'], 
-				 		colNames:['Артикл','Наименование', 'Производитель', 'Цена'], 
+				 		colNames:['Артикл','Наименование', 'Производитель', 'Цена', 'Контрагент'], 
 				 		colModel:[ 
 				 			{name:'art',		index:'art', 		width:60, sorttype:"int"}, 
 				 			{name:'name',		index:'name',	 	width:90, sorttype:"date"}, 
 				 			{name:'manufact',	index:'manufact', 		width:100}, 
-				 			{name:'price',		index:'price', 	width:80, align:"right",sorttype:"float"}
+				 			{name:'price',		index:'price', 	width:80, align:"right",sorttype:"float"},
+				 			{name:'contra',		index:'contra', 	width:80, align:"right",sorttype:"float"}
 				 			//,
 				 			//{name:'contra',		index:'contra', 		width:80, align:"right",sorttype:"float"}
 				 			],

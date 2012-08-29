@@ -4,8 +4,9 @@
     <form method="post" action="<%= url_for('upload') %>" enctype ="multipart/form-data">
       <div>
         File name
-        <input type="file" name="image" >
-        <input type="submit" value="Upload" >
+        <input type="file" name="image" ><br>
+        Контрагент:<input type="text" name="contra"><br>
+        <input type="submit" value="Загрузить" >
       </div>
     </form>
 <div>
