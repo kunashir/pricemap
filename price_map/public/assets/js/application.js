@@ -68,3 +68,22 @@ function doSearch(ev)
 	timeoutHnd = setTimeout(gridReload, 500);
 }
 
+(function($) 
+	{
+  		$(document).ready(
+  			function() 
+			{   
+				var cabinet_defecture_uploader = new qq.FileUploader({
+	            element: $("#upload")[0],
+	            action: '/upload',
+	            params: {
+	                action: 35
+	            },
+	            multiple: false,
+	            uploadButtonText: 'Загрузить файл',
+	            cancelButtonText: 'Отменить',
+	            failUploadText: 'Ошибка загрузки!',
+	            dragText: 'Перетащите сюда файл'
+        		});
+        	});
+})(jQuery);

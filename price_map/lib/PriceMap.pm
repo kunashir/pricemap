@@ -149,8 +149,8 @@ sub startup {
   $r->get('/logout')->to('session#logout');
   $r->get('/signup')->to('session#signup');
   $r->get('/signup_form')->to('session#signup_form');
-  $r->get('/upload_form')->to('analyzer#upload_form');
-  $r->any('/upload')->to('analyzer#upload');
+  $r->any('/upload_form')->to('analyzer#upload_form');
+  $r->post('/upload')->to('analyzer#upload');
   $r->any('/show_file')->to('analyzer#show_file');
   $r->any('/get_data')->to('analyzer#get_data');
 

@@ -39,6 +39,7 @@ sub get_data {
     if ($params->{'nm_mask'})
     {
         $nm_mask = $params->{'nm_mask'};
+        $nm_mask =~ s/ /.*/g;
     }
     my $cd_mask = "";
     if ($params->{'cd_mask'})
@@ -131,7 +132,13 @@ sub parser_excel {
     my $oWks    = $oBook->{Worksheet}[0];
     my $headr_find      = 0;
     
-    my $my_data = [];
+    my $s = $self->app->session;
+    my $my_data = $s->data('price_map');    
+    #my $my_data = [];
+    if (!$my_data)
+    {
+        $my_data = [];
+    }
     my %header_hash = ();
 
     my $find_row_nom    = 0;
@@ -255,14 +262,18 @@ sub show_file {
 sub upload {
     my $self = shift;
 
+    print "upload WORK!!!!!!!!!!!!!!!!!\n";
     # Uploaded image(Mojo::Upload object)
-    my $image = $self->req->upload('image');
+    print Dumper $self->req->body_params->to_hash;
+    print Dumper $self->req->content;
+
+    my $image = $self->req->content;
+    print Dumper $image;
     my $contra = $self->req->body_params->to_hash->{contra};
     # Not upload
     unless ($image) {
         return $self->render(
-            template => 'error', 
-            message  => "Upload fail. File is not specified."
+            json => {error =>"error message to display"}
         );
     }
 
@@ -285,7 +296,11 @@ sub upload {
     $self->parser_excel($image_file, $contra);
 
     # Redirect to top page
-    $self->redirect_to('show_file');
+    #$self->redirect_to('show_file');
+    $self->render(
+       json => {success => 'true'}
+           );
+    #$self->redirect_to('upload_form');
 };
 
 sub upload_form {
