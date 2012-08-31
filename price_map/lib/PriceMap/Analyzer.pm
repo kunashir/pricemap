@@ -135,9 +135,14 @@ sub parser_excel {
     my $s = $self->app->session;
     my $my_data = $s->data('price_map');    
     #my $my_data = [];
+    my $cur_id  = 0;
     if (!$my_data)
     {
         $my_data = [];
+    }
+    else
+    {
+        $cur_id = scalar @$my_data;
     }
     my %header_hash = ();
 
@@ -204,8 +209,11 @@ sub parser_excel {
 
         if ($headr_find)
         {
+            $cur_row->{id}  = $cur_id;
             $cur_row->{contra} = $contra;
+            $cur_row->{count} = 0;
             push $my_data, $cur_row;
+            $cur_id++;
         }
 
     }
@@ -213,6 +221,7 @@ sub parser_excel {
     # print Dumper $my_data;#$s->data('price_map');
     my $s = $self->app->session;
     $s->data('price_map', $my_data);
+    print Dumper $my_data;
     $s->flush;
 };
 
@@ -259,17 +268,44 @@ sub show_file {
 
 }
 
-sub upload {
+sub save_changes{
     my $self = shift;
+    my $POST = $self->req->body_params->to_hash();
+    #my $my_data = $self->app->session->data('price_map');
 
+    $self->app->session->data('price_map')->[$POST->{id}]->{count} = $POST->{count};
+    #print Dumper $my_data->[$POST->{id}];
+    #self->app->session->data('price_map', $my_data);
+    $self->app->session->flush;    
+    $self->render(
+       json => {success => 'Сохранили!'}
+           );
+}
+
+sub del_all{
+    my $self = shift;
+    my $s = $self->app->session;
+    $s->data('price_map', []);
+    $s->flush;
+     $self->render(
+       json => {success => 'Все данные удалены!'}
+           );
+}
+
+sub upload {
+    
+
+    my $self = shift;
+    
+    $self->redirect_to('/login') and return 0 unless($self->is_user_authenticated);
     print "upload WORK!!!!!!!!!!!!!!!!!\n";
     # Uploaded image(Mojo::Upload object)
-    print Dumper $self->req->body_params->to_hash;
-    print Dumper $self->req->content;
+    #print Dumper $self->req->body_params->to_hash;
+    #print Dumper $self->req->content;
 
-    my $image = $self->req->content;
-    print Dumper $image;
-    my $contra = $self->req->body_params->to_hash->{contra};
+    my $image = $self->req->body;
+    print Dumper  $self->req->body;# $self->req;#->{buffer};#->{asset}; #->{content};
+    my $contra = $self->req->query_params->to_hash->{contra};
     # Not upload
     unless ($image) {
         return $self->render(
@@ -278,22 +314,16 @@ sub upload {
     }
 
     # Image file
-    my $full_path = "uploads/".$image->filename;
+    my $full_path = "uploads/".$self->req->query_params->to_hash->{qqfile};
 	print $full_path;
-	print $image->filename;
-    #open (CURFILE, ">$full_path") or die "Can't open/create file $full_path";
+	#print $image->filename;
+    open (CURFILE, ">$full_path") or die "Can't open/create file $full_path";
     #close (CURFILE);
-    my $image_file = $full_path; #"$IMAGE_BASE/" . $image->filename;
+    print CURFILE $image;
+    #my $image_file = $full_path; #"$IMAGE_BASE/" . $image->filename;
     
-    # If file is exists, Retry creating filename
-    #while(-f $image_file){
-    #    $image_file = $full_path; #"$IMAGE_BASE/" . $image->filename;
-    #}
-    
-    # Save to file
-    $image->move_to($image_file);
-    
-    $self->parser_excel($image_file, $contra);
+
+    $self->parser_excel($full_path, $contra);
 
     # Redirect to top page
     #$self->redirect_to('show_file');
@@ -305,5 +335,6 @@ sub upload {
 
 sub upload_form {
 	my $self = shift;
+    $self->redirect_to('/login') and return 0 unless($self->is_user_authenticated);
 }
 1;

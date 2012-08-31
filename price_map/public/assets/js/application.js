@@ -1,3 +1,4 @@
+var lastsel;
 (function($) 
 	{
   		$(document).ready(
@@ -8,15 +9,17 @@
 				 		url:'get_data', 
 				 		datatype: "json",
 				 		height: 550, 
-				 		width: 700,
+				 		width: 800,
 				 		//colNames:['Артикл','Наименование', 'Производитель', 'Цена','Контрагент'], 
-				 		colNames:['Артикл','Наименование', 'Производитель', 'Цена', 'Контрагент'], 
+				 		colNames:['Н./п.','Артикл','Наименование', 'Производитель', 'Цена', 'Контрагент', 'Кол-во для заказа'], 
 				 		colModel:[ 
-				 			{name:'art',		index:'art', 		width:60, sorttype:"int"}, 
-				 			{name:'name',		index:'name',	 	width:90, sorttype:"date"}, 
-				 			{name:'manufact',	index:'manufact', 		width:100}, 
-				 			{name:'price',		index:'price', 	width:80, align:"right",sorttype:"float"},
-				 			{name:'contra',		index:'contra', 	width:80, align:"right",sorttype:"float"}
+				 			{name:'id',			index:'id', 		width:10, sorttype:"int"}, 
+				 			{name:'art',		index:'art', 		width:10, sorttype:"int"}, 
+				 			{name:'name',		index:'name',	 	width:50, sorttype:"date"}, 
+				 			{name:'manufact',	index:'manufact', 	width:50 }, 
+				 			{name:'price',		index:'price', 		width:20, align:"right",sorttype:"float"},
+				 			{name:'contra',		index:'contra', 	width:50, align:"right",sorttype:"float"},
+				 			{name:'count',		index:'count', 		width:10, align:"left", sorttype:"float", editable:true}
 				 			//,
 				 			//{name:'contra',		index:'contra', 		width:80, align:"right",sorttype:"float"}
 				 			],
@@ -33,8 +36,17 @@
 				 			total: "total",
 				 			records : "records",
 				 			id 		: "0"
-				 		},				 		
-				 		caption:"JSON Example"
+				 		},	
+				 		onSelectRow: function(id)
+				 		{ 
+				 			if(id && id!==lastsel)
+				 			{ jQuery('#list4').jqGrid('restoreRow',lastsel); 
+				 				jQuery('#list4').jqGrid('editRow',id,true); 
+				 				lastsel=id; 
+				 	 		} 
+				 	 	}, 
+				 	 	editurl: "save_changes",			 		
+				 		caption:"Данные прайсов"
 				 	}
 				 		
 				); 
@@ -68,16 +80,19 @@ function doSearch(ev)
 	timeoutHnd = setTimeout(gridReload, 500);
 }
 
+var uploader;
+
 (function($) 
 	{
   		$(document).ready(
   			function() 
 			{   
-				var cabinet_defecture_uploader = new qq.FileUploader({
+				uploader = new qq.FileUploader({
 	            element: $("#upload")[0],
 	            action: '/upload',
 	            params: {
-	                action: 35
+	                action: 35,
+	                contra: $("#contra").val()
 	            },
 	            multiple: false,
 	            uploadButtonText: 'Загрузить файл',
@@ -87,3 +102,31 @@ function doSearch(ev)
         		});
         	});
 })(jQuery);
+
+
+function setNewParams ()
+{
+	uploader.setParams( {contra: $("#contra").val()});
+}
+
+function del_all()
+{
+	$("#server_ans").html("ddd");
+              $.ajax(
+              {
+                type: "POST",
+                url:  "/del_all",
+                data: "",
+                dataType: "text",
+                error:  function(XMLHttpRequest, textStatus, errorThrown)
+                {
+                  alert("Ошибка удаления!");
+                },
+                success:  function(result)
+                {
+                  //alert (result);
+                  $("#server_ans").html(result);
+                }
+                  
+              });
+}
