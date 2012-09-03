@@ -1,6 +1,7 @@
 package PriceMap::Session;
 use Mojo::Base 'Mojolicious::Controller';
 
+
 sub  signup {
 	my $self = shift;
 

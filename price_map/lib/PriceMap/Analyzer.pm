@@ -46,6 +46,11 @@ sub get_data {
     {
         $cd_mask = $params->{'cd_mask'};
     }
+    my $show_order = 0;
+    if ($params->{'show_order'})
+    {
+        $show_order = $params->{'show_order'};
+    }
     my $page = $params->{'page'} || 1; # get the requested page 
     my $limit = $params->{'rows'}|| 20; # get how many rows we want to have into the grid 
     my $sidx = $params->{'sidx'}; # get index row - i.e. user click to sort 
@@ -61,28 +66,44 @@ sub get_data {
     my $total_records = scalar @$arr;
     print "total rec=",$total_records;
     print "nm_mask=", $nm_mask;
+    #print "show_order =", $show_order;
     if ( $nm_mask ne "")
     {
         for ( my $i = 0; $i <= $total_records ; $i++ )
         {
             my $href = $arr->[$i];
-            #my @cur_arr = ();
             
+           
                 if ( $href->{name} =~ m/$nm_mask/i)
                 {
                     #если значение удолетворяет маске, то добавим в выборку
                     push $rows,  $href;#\@cur_arr};
                 }
-                
+              
         }
         
     }
     else #если нет фильтра, тогда все что есть возвращаем
     {
-        $rows = $arr;
+        if ($show_order != 0)          
+        {
+            for ( my $i = 0; $i <= $total_records ; $i++ )
+            {
+                my $href = $arr->[$i];    
+                print "IN show order=================";
+                if ($href->{count})
+                {
+                    push $rows, $href;
+                }
+            }
+        }
+        else
+        {
+            $rows = $arr;
+        }
     }
-    print "ROWS====================>";
-    print Dumper $rows;
+   # print "ROWS====================>";
+   # print Dumper $rows;
     my $total_pages = 10;
     my $records = scalar @$rows;
     print "limit->", $limit;
@@ -101,12 +122,12 @@ sub get_data {
 
     my @section = @$rows[${start_index}..${end_index}];
 
-    print Dumper "sec=", @section;
+    #print Dumper "sec=", @section;
     $result->{rows} = [@section];
     print "start index =",$start_index;
     print "end index =",$end_index;
-    print "RESULT====================>";
-    print  Dumper $result;
+   # print "RESULT====================>";
+   # print  Dumper $result;
 
     $self->render(
        json => $result
@@ -221,7 +242,7 @@ sub parser_excel {
     # print Dumper $my_data;#$s->data('price_map');
     my $s = $self->app->session;
     $s->data('price_map', $my_data);
-    print Dumper $my_data;
+    #print Dumper $my_data;
     $s->flush;
 };
 
@@ -271,11 +292,12 @@ sub show_file {
 sub save_changes{
     my $self = shift;
     my $POST = $self->req->body_params->to_hash();
-    #my $my_data = $self->app->session->data('price_map');
+    my $my_data = $self->app->session->data('price_map');
 
-    $self->app->session->data('price_map')->[$POST->{id}]->{count} = $POST->{count};
-    #print Dumper $my_data->[$POST->{id}];
+    $my_data->[$POST->{id}]->{count} = $POST->{count};
+    print $my_data->[$POST->{id}];
     #self->app->session->data('price_map', $my_data);
+    $self->app->session->data('price_map', $my_data);
     $self->app->session->flush;    
     $self->render(
        json => {success => 'Сохранили!'}

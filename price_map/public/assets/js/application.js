@@ -65,6 +65,26 @@ function gridReload()
 	jQuery("#list4").jqGrid('setGridParam', {url:"get_data?nm_mask="+nm_mask+"&cd_mask="+cd_mask,page:1}).trigger("reloadGrid");
 }
 
+
+(function($) 
+	{
+  		$(document).ready(
+  			function() 
+  			{
+				jQuery("#order").change(
+					function(){
+						var cur_state = 0;
+						if ($("#order").is(":checked"))
+						{
+							cur_state = 1;
+						}
+						jQuery("#list4").jqGrid('setGridParam', {url:"get_data?show_order="+cur_state,page:1}).trigger("reloadGrid");
+						
+					}
+			)
+}); })(jQuery);
+
+
 function enableAutosubmit(state)
 {
 	flAuto = state;

@@ -6,6 +6,7 @@
 <div>
 	Наименование<br /> <input type="text" id="item" onkeydown="doSearch(arguments[0]||event)"/>
 	<button onclick="gridReload()" id="submitButton" style="margin-left:30px;">Поиск</button>
+	<input id="order" type = "checkbox" onkeydown="showOrder()"/>Показать позиции для заказа
 </div>
 <br />
 

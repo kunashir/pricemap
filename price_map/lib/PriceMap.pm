@@ -16,6 +16,7 @@ use Spreadsheet::ParseExcel::FmtUnicode;
 use MojoX::Session;
 use MojoX::Session::Store::Dbi;
 use MojoX::Session::Store::File;
+use PriceMap::DB::Contra;
 
 #Singleton Mojox::Session
 my $_session;
@@ -47,6 +48,9 @@ sub session{
 sub startup {
   my $self = shift;
   $self->secret("sEcrEt"); 
+
+  my $c = PriceMap::DB::Contra->new(id => 1, name => 'stupid contra');
+  $c->save;
   #$self->plugin('digest_auth', allow => {'Admin' => {sshaw => 'mu_pass'}});
   # Documentation browser under "/perldoc"
   $self->plugin('PODRenderer');
