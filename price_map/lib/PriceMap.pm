@@ -49,8 +49,8 @@ sub startup {
   my $self = shift;
   $self->secret("sEcrEt"); 
 
-  my $c = PriceMap::DB::Contra->new(id => 1, name => 'stupid contra');
-  $c->save;
+  # my $c = PriceMap::DB::Contra->new(id => 1, name => 'stupid contra');
+  # $c->save;
   #$self->plugin('digest_auth', allow => {'Admin' => {sshaw => 'mu_pass'}});
   # Documentation browser under "/perldoc"
   $self->plugin('PODRenderer');
@@ -159,6 +159,7 @@ sub startup {
   $r->any('/get_data')->to('analyzer#get_data');
   $r->any('/save_changes')->to('analyzer#save_changes');
   $r->post('/del_all')->to('analyzer#del_all');
+  $r->any('/index')->to('ContraController#index');
 
   #Set server-storable session
   $self->hook(before_dispatch => sub {
