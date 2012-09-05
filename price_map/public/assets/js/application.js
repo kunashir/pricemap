@@ -150,3 +150,55 @@ function del_all()
                   
               });
 }
+
+(function($) 
+	{
+  		$(document).ready(
+  			function() 
+  			{
+				 jQuery("#contra_table").jqGrid(
+				 	{ 
+				 		url:'get_index', 
+				 		datatype: "json",
+				 		height: 550, 
+				 		width: 800,
+				 		//colNames:['Артикл','Наименование', 'Производитель', 'Цена','Контрагент'], 
+				 		colNames:['Н./п.','Наименование', 'E-mail', 'Путь к прайсу'], 
+				 		colModel:[ 
+				 			{name:'id',			index:'id', 		width:10, sorttype:"int"}, 
+				 			{name:'name',		index:'name',	 	width:50, sorttype:"date"}, 
+				 			{name:'email',		index:'email', 		width:50 }, 
+				 			{name:'price_path',	index:'price_path',	width:10, align:"left", sorttype:"float", editable:true}
+				 			//,
+				 			//{name:'contra',		index:'contra', 		width:80, align:"right",sorttype:"float"}
+				 			],
+				 		rowNum:10, 
+				 		rowList:[10,20,30], 
+				 		pager: '#contra_pager', 
+				 		sortname: 'name', 
+				 		viewrecords: true, 
+				 		sortorder: "desc", 
+				 		jsonReader: {
+				 			repeatitems: false, 
+				 			root : "rows",
+				 			page : "page",
+				 			total: "total",
+				 			records : "records",
+				 			id 		: "0"
+				 		},	
+				 		onSelectRow: function(id)
+				 		{ 
+				 			if(id && id!==lastsel)
+				 			{ jQuery('#list4').jqGrid('restoreRow',lastsel); 
+				 				jQuery('#list4').jqGrid('editRow',id,true); 
+				 				lastsel=id; 
+				 	 		} 
+				 	 	}, 
+				 	 	editurl: "",			 		
+				 		caption:"Справочник поставщиков"
+				 	}
+				 		
+				); 
+ 				jQuery("#contra_table").jqGrid('navGrid','#contra_pager',{edit:false,add:false,del:false}); 
+ 			}
+ 		); })(jQuery);

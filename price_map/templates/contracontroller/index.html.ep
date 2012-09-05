@@ -1,4 +1,5 @@
 % layout 'default';
 % title 'Show file';
 <h1>Справочинк поставщиков:</h1>
-<%= $list %>
+<table id="contra_table"></table>
+<div id="contra_pager"></div> 

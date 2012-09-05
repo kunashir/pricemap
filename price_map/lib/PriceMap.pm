@@ -122,7 +122,7 @@ sub startup {
                 #
                 
                 $self->flash(message => 'Thanks for logging in.');
-
+                $self->app->session->data('user_id', $res->{user_id});
                 return $res->{user_id};
 
             }
@@ -159,7 +159,8 @@ sub startup {
   $r->any('/get_data')->to('analyzer#get_data');
   $r->any('/save_changes')->to('analyzer#save_changes');
   $r->post('/del_all')->to('analyzer#del_all');
-  $r->any('/index')->to('ContraController#index');
+  $r->any('/index')->to('contracontroller#index');
+  $r->any('/get_index')->to('contracontroller#get_index');
 
   #Set server-storable session
   $self->hook(before_dispatch => sub {

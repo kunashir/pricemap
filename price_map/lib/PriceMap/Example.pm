@@ -1,5 +1,7 @@
 package PriceMap::Example;
 use Mojo::Base 'Mojolicious::Controller';
+use encoding 'utf8'; #чтобы текст понимался русский
+use utf8;
 
 # This action will render a template
 sub welcome {
@@ -8,7 +10,7 @@ sub welcome {
 	my $m = '';
 	if ( not $self->is_user_authenticated ) {
 
-        $m = "You must log in to view this page" ;
+        $m = "Для просмотра старницы вы должны войти/зарегистрироваться" ;
 
         #$self->redirect_to('/');
 		
@@ -19,7 +21,7 @@ sub welcome {
     {
   #return unless $self->digest_auth(allow => {sshaw => 'mu_pass'});
   # Render template "example/welcome.html.ep" with message
-		$m = "Welcome to the Mojolicious real-time web framework!";
+		$m = "Добро пожаловать, в Анализ прайсов!";
 	}
 	$self->stash(ppp=>$m);
 }

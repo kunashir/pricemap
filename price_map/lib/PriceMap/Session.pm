@@ -1,5 +1,7 @@
 package PriceMap::Session;
 use Mojo::Base 'Mojolicious::Controller';
+use encoding 'utf8'; #чтобы текст понимался русский
+use utf8;
 
 
 sub  signup {
@@ -56,11 +58,12 @@ sub  login {
     if ( $self->authenticate( $user, $pass ) ) {
 
         $self->redirect_to('/');
+        print "USER_ID".$self->app->session->data('user_id');
 
     }
     else {
 
-        $self->flash( message => 'Invalid credentials!' );
+        $self->flash( message => 'Ошибка входа!' );
 
         $self->redirect_to('/login_form');
 
