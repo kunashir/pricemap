@@ -21,7 +21,7 @@
 	    <!-- jqGrid -->
 	    <script src="/assets/js/application.js" type="text/javascript"></script>
 	</head>
-  <body>
+  	<body>
 	  <div class="container">
 		<%= content %>
 	  </div>

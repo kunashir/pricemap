@@ -161,7 +161,7 @@ sub startup {
   $r->post('/del_all')->to('analyzer#del_all');
   $r->any('/index')->to('contracontroller#index');
   $r->any('/get_index')->to('contracontroller#get_index');
-
+  $r->post('/operations_contra')->to('contracontroller#operations_contra');
   #Set server-storable session
   $self->hook(before_dispatch => sub {
     my $c = shift;

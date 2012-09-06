@@ -12,6 +12,27 @@ sub index {
 	
 }
 
+sub operations_contra {
+    my $self = shift;
+    my $params = $self->req->body_params->to_hash();
+    my $cur_con = PriceMap::DB::Contra->new(id => $params->{'id'});
+    $cur_con->load;
+    $cur_con->name($params->{'name'});
+    $cur_con->email($params->{'email'});
+    $cur_con->price_path($params->{price_path});
+    if ($cur_con->save)
+    {
+        $self->render(
+        json => {success => 'Сохранено!'});
+    }
+    else
+    {
+        $self->render(
+        json => {error => 'Произошла ошибка при сохранении изменений!'});
+    }
+
+}
+
 sub get_index {
 
 	my $self = shift;
@@ -33,7 +54,7 @@ sub get_index {
     my $sidx = $params->{'sidx'}; # get index row - i.e. user click to sort 
     my $sord = $params->{'sord'}; # get the direction
 
-	my $output_text = "";
+	#my $output_text = "";
 	my $cur_user = $self->app->session->data('user_id');
 	my $contras = PriceMap::DB::Contra::Manager->get_contras(
 		# query => [

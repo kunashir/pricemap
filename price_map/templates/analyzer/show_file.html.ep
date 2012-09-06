@@ -1,5 +1,6 @@
 % layout 'default';
 % title 'Show file';
+
 <h1>Uploading file to analyze</h1>
 <div> Поиск:</div>
 <div><input="text" id="search_cd" onkeydown="doSearch(arguments[0]||event)"/> </div>
