@@ -88,7 +88,7 @@ var lastsel_contra;
 				 			page : "page",
 				 			total: "total",
 				 			records : "records",
-				 			id 		: "0"
+				 			id 		: "id"
 				 		},	
 				 		// onSelectRow: function(id)
 				 		// { 
@@ -104,12 +104,12 @@ var lastsel_contra;
 				 		
 				);
 				//jQuery("#grid_id").jqGrid('navGrid',selector,options,pEdit,pAdd,pDel,pSearch );  
- 				jQuery("#contra_table").jqGrid('navGrid','#contra_pager',
- 					{edit:true,add:true,del:true},
- 					{height:280, reloadAfterSubmit:false},
- 					{height:280, reloadAfterSubmit:false},
- 					{reloadAfterSubmit:false},
- 					{}); 
+ 				jQuery("#contra_table").jqGrid('navGrid','#contra_pager') ;//,
+ 					// {edit:true,add:true,del:true},
+ 					// {height:280, reloadAfterSubmit:false},
+ 					// {height:280, reloadAfterSubmit:false},
+ 					// {reloadAfterSubmit:false},
+ 					// {}); 
  				//jQuery("#grid_id").editGridRow( new);  
  				//jQuery("#contra_table").jqGrid('inlineNav',"#contra_table");
  			}
