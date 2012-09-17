@@ -41,7 +41,8 @@ var lastsel_contra;
 				 		onSelectRow: function(id)
 				 		{ 
 				 			if(id && id!==lastsel)
-				 			{ jQuery('#list4').jqGrid('restoreRow',lastsel); 
+				 			{ 
+				 				jQuery('#list4').jqGrid('restoreRow',lastsel); 
 				 				jQuery('#list4').jqGrid('editRow',id,true); 
 				 				lastsel=id; 
 				 	 		} 
@@ -51,7 +52,7 @@ var lastsel_contra;
 				 	}
 				 		
 				); 
- 				jQuery("#list4").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false}); 
+ 				jQuery("#list4").jqGrid('navGrid','#pager2',{edit:true,add:false,del:false}); 
  			}
  		); })(jQuery);
 
@@ -72,7 +73,7 @@ var lastsel_contra;
 				 			{name:'id',			index:'id', 		width:10, sorttype:"int", editable:false, editoptions:{readonly:true, size:10}}, 
 				 			{name:'name',		index:'name',	 	width:50,  editable:true, editoptions:{size:50}}, 
 				 			{name:'email',		index:'email', 		width:50 , editable:true, editoptions:{size:50}}, 
-				 			{name:'price_path',	index:'price_path',	width:10, align:"left", editable:true,  editoptions:{size:50}}
+				 			{name:'price_path',	index:'price_path',	width:10, align:"left", editable:true, edittype:'text', editoptions:{size:250}}
 				 			//,
 				 			//{name:'contra',		index:'contra', 		width:80, align:"right",sorttype:"float"}
 				 			],
@@ -90,21 +91,24 @@ var lastsel_contra;
 				 			records : "records",
 				 			id 		: "id"
 				 		},	
-				 		// onSelectRow: function(id)
-				 		// { 
-				 		// 	if(id && id!==lastsel_contra)
-				 		// 	{ jQuery('#contra_table').jqGrid('restoreRow',lastsel_contra); 
-				 		// 		jQuery('#contra_table').jqGrid('editRow',id,true); 
-				 		// 		lastsel_contra=id; 
-				 	 // 		} 
-				 	 // 	}, 
+				 		onSelectRow: function(id)
+				 		{ 
+				 			if(id && id!==lastsel_contra)
+				 			{ 
+				 				jQuery('#contra_table').jqGrid('restoreRow',lastsel_contra); 
+				 				jQuery('#contra_table').jqGrid('editRow',id,true); 
+				 				lastsel_contra=jQuery("#contra_table").jqGrid('getGridParam','selrow');; 
+				 	 		} 
+				 	 	}, 
 				 	 	editurl: 'operations_contra',			 		
 				 		caption:"Справочник поставщиков"
 				 	}
 				 		
 				);
 				//jQuery("#grid_id").jqGrid('navGrid',selector,options,pEdit,pAdd,pDel,pSearch );  
- 				jQuery("#contra_table").jqGrid('navGrid','#contra_pager') ;//,
+ 				jQuery("#contra_table").jqGrid('navGrid', '#contra_pager', {edit:true,add:true,del:true}) ;//
+ 				//jQuery("#contra_table").jqGrid('inlineNav',"#contra_pager");
+ 				//jQuery("#contra_table").jqGrid('editGridRow', lastsel_contra, true );
  					// {edit:true,add:true,del:true},
  					// {height:280, reloadAfterSubmit:false},
  					// {height:280, reloadAfterSubmit:false},

@@ -19,7 +19,7 @@ sub operations_contra {
     $cur_con->load;
     $cur_con->name($params->{'name'});
     $cur_con->email($params->{'email'});
-    $cur_con->price_path($params->{price_path});
+    $cur_con->price_path($params->{'price_path'});
     if ($cur_con->save)
     {
         $self->render(
