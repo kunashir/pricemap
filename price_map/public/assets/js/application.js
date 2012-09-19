@@ -72,8 +72,8 @@ var lastsel_contra;
 				 		colModel:[ 
 				 			{name:'id',			index:'id', 		width:10, sorttype:"int", editable:false, editoptions:{readonly:true, size:10}}, 
 				 			{name:'name',		index:'name',	 	width:50,  editable:true, editoptions:{size:50}}, 
-				 			{name:'email',		index:'email', 		width:50 , editable:true, editoptions:{size:50}}, 
-				 			{name:'price_path',	index:'price_path',	width:10, align:"left", editable:true, edittype:'text', editoptions:{size:250}}
+				 			{name:'email',		index:'email', 		width:20 , editable:true, editoptions:{size:50}}, 
+				 			{name:'price_path',	index:'price_path',	width:20, align:"left", editable:true, edittype:'file', editoptions:{size:150}}
 				 			//,
 				 			//{name:'contra',		index:'contra', 		width:80, align:"right",sorttype:"float"}
 				 			],
@@ -91,22 +91,28 @@ var lastsel_contra;
 				 			records : "records",
 				 			id 		: "id"
 				 		},	
-				 		onSelectRow: function(id)
-				 		{ 
-				 			if(id && id!==lastsel_contra)
-				 			{ 
-				 				jQuery('#contra_table').jqGrid('restoreRow',lastsel_contra); 
-				 				jQuery('#contra_table').jqGrid('editRow',id,true); 
-				 				lastsel_contra=jQuery("#contra_table").jqGrid('getGridParam','selrow');; 
-				 	 		} 
-				 	 	}, 
+				 		// onSelectRow: function(id)
+				 		// { 
+				 		// 	if(id && id!==lastsel_contra)
+				 		// 	{ 
+				 		// 		jQuery('#contra_table').jqGrid('restoreRow',lastsel_contra); 
+				 		// 		jQuery('#contra_table').jqGrid('editRow',id,true); 
+				 		// 		lastsel_contra= id;//jQuery("#contra_table").jqGrid('getGridParam','selrow');; 
+				 	 // 		} 
+				 	 // 	}, 
 				 	 	editurl: 'operations_contra',			 		
 				 		caption:"Справочник поставщиков"
 				 	}
 				 		
 				);
 				//jQuery("#grid_id").jqGrid('navGrid',selector,options,pEdit,pAdd,pDel,pSearch );  
- 				jQuery("#contra_table").jqGrid('navGrid', '#contra_pager', {edit:true,add:true,del:true}) ;//
+ 				jQuery("#contra_table").jqGrid('navGrid', '#contra_pager', {},
+ 				{}, //options 
+ 				{height:280,reloadAfterSubmit:false}, // edit options 
+ 				{height:280,reloadAfterSubmit:false}, // add options 
+ 				{reloadAfterSubmit:false}, // del options 
+ 				{} // search options 
+ 				);
  				//jQuery("#contra_table").jqGrid('inlineNav',"#contra_pager");
  				//jQuery("#contra_table").jqGrid('editGridRow', lastsel_contra, true );
  					// {edit:true,add:true,del:true},
