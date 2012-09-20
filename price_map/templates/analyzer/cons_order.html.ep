@@ -1,0 +1,10 @@
+% layout 'default';
+% title 'Upload';
+
+<h1>Общий заказ от <%= localtime() %> </h1> 
+<table>
+	<tr>
+		<td>Артикул</td><td>Наименование</td><td>Производитель</td><td>Цена</td><td>Поставщик</td><td>Кол-во для заказа</td>
+	</tr>
+	<%== $table_data %>
+</table>

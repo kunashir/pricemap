@@ -2,6 +2,7 @@ use strict;
 use warnings;
 package PriceMap::Analyzer;
 use Mojo::Base 'Mojolicious::Controller';
+use PriceMap::DB::Contra; 
 use Data::Dumper;
 use Encode;
 #use Lingua::DetectCharset;
@@ -21,6 +22,41 @@ my $IMAGE_BASE = '/uploads';
 # причем $list - это тоже хеш { id => '', row => [это уже массив со значениями]]}
 #
 #
+
+sub order {
+    my $self = shift;
+    my $data = $self->render_mail('analyzer/order');
+    $self->render($self->mail(
+      mail => {
+        To      => 'korolev@roshen48.ru',
+        Subject => 'Subject',
+        Data    => $data,
+      },
+        )
+    );
+}
+
+#формирование сводного заказка
+sub cons_order {
+    my $self = shift;
+    my $s = $self->app->session;
+    my $arr = $s->data('price_map');
+    my $total_records = scalar @$arr;
+    my $rows = "";
+    for ( my $i = 0; $i <= $total_records ; $i++ )
+    {
+        my $href = $arr->[$i];    
+        if ($href->{count})
+        {
+            my $cur_row = "<tr><td>".$href->{art}."</td>"."<td>".$href->{name}."</td>"."<td>".$href->{manufact}."</td>"."<td>".$href->{price}.
+                    "</td>"."<td>".$href->{contra}."</td>"."<td>".$href->{count}."</td></tr>";
+            $rows .= $cur_row;
+        }
+    }
+
+    $self->stash(table_data => $rows);
+}
+
 sub get_data {
     my $self = shift;
     print '=========================GET_DATA work===============================';
@@ -142,7 +178,10 @@ sub parser_excel {
 
     print "paser work!";
     my $filename = shift; # имя файла, который будем парсить
-    my $contra = shift; #имя контрагента чей файл грузим, его тоже положим в данные
+    my $id_contra = shift; #имя контрагента чей файл грузим, его тоже положим в данные
+    my $contra = PriceMap::DB::Contra->new(id => $id_contra);
+    $contra->load;
+    print Dumper $contra->name;
     # Создаем объект-парсер
     my $oExcel  = new Spreadsheet::ParseExcel;
     # code page
@@ -169,6 +208,7 @@ sub parser_excel {
 
     my $find_row_nom    = 0;
     my $find_row_price  = 0;
+
     for (my $i = 0; $i <= $oWks->{MaxRow} ; $i++) #
     {
         my $is_header = 0;
@@ -231,7 +271,8 @@ sub parser_excel {
         if ($headr_find)
         {
             $cur_row->{id}  = $cur_id;
-            $cur_row->{contra} = $contra;
+            $cur_row->{contra} = $contra->name;
+            $cur_row->{contra_id} = $contra->id;
             $cur_row->{count} = 0;
             push $my_data, $cur_row;
             $cur_id++;

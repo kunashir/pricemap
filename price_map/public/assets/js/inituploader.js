@@ -24,7 +24,7 @@ var uploader;
 
 function setNewParams ()
 {
-	uploader.setParams( {contra: $("#contra").val()});
+	uploader.setParams( {contra: $("#contra_sel").val()});
 }
 
 function del_all()
@@ -48,3 +48,19 @@ function del_all()
           
       });
 } 
+
+(function($) 
+{
+  $(document).ready(
+    function() 
+    {
+        $("#contra_sel").change(
+         function() 
+         {
+            setNewParams();
+              
+                  
+              });
+        
+    });
+  })(jQuery);
