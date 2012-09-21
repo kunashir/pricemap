@@ -64,23 +64,27 @@ sub startup {
 		helper => 'db',
 
 	});
-#
-#Init mail plugin
-#
-    my $conf = {
-    from     => 'kunash123@gmail.com',
-    encoding => 'base64',
-    type     => 'text/html',
-    how      => 'sendmail',
-    howargs  => [ '/usr/sbin/sendmail -t' ],
-  };
-  $self->plugin(mail => $conf);
+
 
 #
 # Use strong encryption
 #
 
 	$self->plugin('bcrypt');
+
+
+#
+#Init mail plugin
+#
+    my $conf = {
+    from     => 'korolev@apteka-s.ru',
+    encoding => 'base64',
+    type     => 'text/html',
+    how      => 'smtp',
+    #howargs  => [ 'srv-mail', AuthUser=>'robot', AuthPass => 'hl7kx4v']
+    howargs  => [ 'smtp.yandex.ru', AuthUser=>'korolev@apteka-s.ru', AuthPass => 'futurama']
+  };
+  $self->plugin(mail => $conf);
 
 #
 # Database-based authentication example
