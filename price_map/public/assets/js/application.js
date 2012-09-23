@@ -12,7 +12,7 @@ var lastsel_contra;
 				 		height: 550, 
 				 		width: 800,
 				 		//colNames:['Артикл','Наименование', 'Производитель', 'Цена','Контрагент'], 
-				 		colNames:['Н./п.','Артикл','Наименование', 'Производитель', 'Цена', 'Контрагент', 'Кол-во для заказа'], 
+				 		colNames:['Н./п.','Артикл','Наименование', 'Производитель', 'Цена', 'Контрагент', 'Кол-во для заказа', 'id_contra'], 
 				 		colModel:[ 
 				 			{name:'id',			index:'id', 		width:10, sorttype:"int"}, 
 				 			{name:'art',		index:'art', 		width:10, sorttype:"int"}, 
@@ -20,7 +20,8 @@ var lastsel_contra;
 				 			{name:'manufact',	index:'manufact', 	width:50 }, 
 				 			{name:'price',		index:'price', 		width:20, align:"right",sorttype:"float"},
 				 			{name:'contra',		index:'contra', 	width:50, align:"right",sorttype:"float"},
-				 			{name:'count',		index:'count', 		width:10, align:"left", sorttype:"float", editable:true}
+				 			{name:'count',		index:'count', 		width:10, align:"left", sorttype:"float", editable:true},
+				 			{name:'id_contra',	index:'id_contra',	width:10, align:"left", sorttype:"float", hidden:true}
 				 			//,
 				 			//{name:'contra',		index:'contra', 		width:80, align:"right",sorttype:"float"}
 				 			],
@@ -41,7 +42,8 @@ var lastsel_contra;
 				 		onSelectRow: function(id)
 				 		{ 
 				 			if(id && id!==lastsel)
-				 			{ jQuery('#list4').jqGrid('restoreRow',lastsel); 
+				 			{ 
+				 				jQuery('#list4').jqGrid('restoreRow',lastsel); 
 				 				jQuery('#list4').jqGrid('editRow',id,true); 
 				 				lastsel=id; 
 				 	 		} 
@@ -51,7 +53,7 @@ var lastsel_contra;
 				 	}
 				 		
 				); 
- 				jQuery("#list4").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false}); 
+ 				jQuery("#list4").jqGrid('navGrid','#pager2',{edit:true,add:false,del:false}); 
  			}
  		); })(jQuery);
 
@@ -71,8 +73,8 @@ var lastsel_contra;
 				 		colModel:[ 
 				 			{name:'id',			index:'id', 		width:10, sorttype:"int", editable:false, editoptions:{readonly:true, size:10}}, 
 				 			{name:'name',		index:'name',	 	width:50,  editable:true, editoptions:{size:50}}, 
-				 			{name:'email',		index:'email', 		width:50 , editable:true, editoptions:{size:50}}, 
-				 			{name:'price_path',	index:'price_path',	width:10, align:"left", editable:true,  editoptions:{size:50}}
+				 			{name:'email',		index:'email', 		width:20 , editable:true, editoptions:{size:50}}, 
+				 			{name:'price_path',	index:'price_path',	width:20, align:"left", editable:true, edittype:'file', editoptions:{size:150}}
 				 			//,
 				 			//{name:'contra',		index:'contra', 		width:80, align:"right",sorttype:"float"}
 				 			],
@@ -93,9 +95,10 @@ var lastsel_contra;
 				 		// onSelectRow: function(id)
 				 		// { 
 				 		// 	if(id && id!==lastsel_contra)
-				 		// 	{ jQuery('#contra_table').jqGrid('restoreRow',lastsel_contra); 
+				 		// 	{ 
+				 		// 		jQuery('#contra_table').jqGrid('restoreRow',lastsel_contra); 
 				 		// 		jQuery('#contra_table').jqGrid('editRow',id,true); 
-				 		// 		lastsel_contra=id; 
+				 		// 		lastsel_contra= id;//jQuery("#contra_table").jqGrid('getGridParam','selrow');; 
 				 	 // 		} 
 				 	 // 	}, 
 				 	 	editurl: 'operations_contra',			 		
@@ -104,7 +107,15 @@ var lastsel_contra;
 				 		
 				);
 				//jQuery("#grid_id").jqGrid('navGrid',selector,options,pEdit,pAdd,pDel,pSearch );  
- 				jQuery("#contra_table").jqGrid('navGrid','#contra_pager') ;//,
+ 				jQuery("#contra_table").jqGrid('navGrid', '#contra_pager', {},
+ 				{}, //options 
+ 				{height:280,reloadAfterSubmit:false}, // edit options 
+ 				{height:280,reloadAfterSubmit:false}, // add options 
+ 				{reloadAfterSubmit:false}, // del options 
+ 				{} // search options 
+ 				);
+ 				//jQuery("#contra_table").jqGrid('inlineNav',"#contra_pager");
+ 				//jQuery("#contra_table").jqGrid('editGridRow', lastsel_contra, true );
  					// {edit:true,add:true,del:true},
  					// {height:280, reloadAfterSubmit:false},
  					// {height:280, reloadAfterSubmit:false},

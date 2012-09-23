@@ -9,6 +9,7 @@ use Mojo::Base 'Mojolicious';
 use Mojolicious::Plugin::Authentication;
 use Mojolicious::Plugin::Bcrypt;
 use Mojolicious::Plugin::Database;
+use Mojolicious::Plugin::Mail;
 use DBI;
 use Mojo::Upload;
 use Spreadsheet::ParseExcel;
@@ -64,11 +65,26 @@ sub startup {
 
 	});
 
+
 #
 # Use strong encryption
 #
 
 	$self->plugin('bcrypt');
+
+
+#
+#Init mail plugin
+#
+    my $conf = {
+    from     => 'korolev@apteka-s.ru',
+    encoding => 'base64',
+    type     => 'text/html',
+    how      => 'smtp',
+    #howargs  => [ 'srv-mail', AuthUser=>'robot', AuthPass => 'hl7kx4v']
+    howargs  => [ 'smtp.yandex.ru', AuthUser=>'korolev@apteka-s.ru', AuthPass => 'futurama']
+  };
+  $self->plugin(mail => $conf);
 
 #
 # Database-based authentication example
@@ -157,6 +173,8 @@ sub startup {
   $r->post('/upload')->to('analyzer#upload');
   $r->any('/show_file')->to('analyzer#show_file');
   $r->any('/get_data')->to('analyzer#get_data');
+  $r->get('/cons_order')->to('analyzer#cons_order');
+  $r->get('/order')->to('analyzer#order');
   $r->any('/save_changes')->to('analyzer#save_changes');
   $r->post('/del_all')->to('analyzer#del_all');
   $r->any('/index')->to('contracontroller#index');

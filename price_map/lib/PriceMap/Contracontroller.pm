@@ -15,11 +15,21 @@ sub index {
 sub operations_contra {
     my $self = shift;
     my $params = $self->req->body_params->to_hash();
-    my $cur_con = PriceMap::DB::Contra->new(id => $params->{'id'});
-    $cur_con->load;
+    my $operation_type = $params->{'oper'};
+    my $cur_con;
+    if ($operation_type eq 'add')
+    {
+        $cur_con = PriceMap::DB::Contra->new();
+    }
+    else
+    {
+        $cur_con = PriceMap::DB::Contra->new(id => $params->{'id'});
+        $cur_con->load;
+    }
     $cur_con->name($params->{'name'});
     $cur_con->email($params->{'email'});
-    $cur_con->price_path($params->{price_path});
+    $cur_con->price_path($params->{'price_path'});
+    $cur_con->user_id($self->app->session->data('user_id'));
     if ($cur_con->save)
     {
         $self->render(

@@ -3,6 +3,8 @@
 
 <h1>Uploading file to analyze</h1>
 	<div id="server_ans"> </div>
+	<% use PriceMap::DB::Contra::Manager; %>
+	<div> <%= select_field contra => PriceMap::DB::Contra::Manager->select_tag_data(), id => "contra_sel"; %>
  	<div> <input type="text" id="contra" onblur="setNewParams();"/> </div>
 
     <div id="upload"> </div>
