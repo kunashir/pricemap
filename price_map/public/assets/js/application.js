@@ -101,7 +101,7 @@ var lastsel_contra;
 				 		// 		lastsel_contra= id;//jQuery("#contra_table").jqGrid('getGridParam','selrow');; 
 				 	 // 		} 
 				 	 // 	}, 
-				 	 	editurl: 'operations_contra',			 		
+				 	 	editurl: 'operations',			 		
 				 		caption:"Справочник поставщиков"
 				 	}
 				 		

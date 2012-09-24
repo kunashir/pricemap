@@ -1,5 +1,8 @@
 package PriceMap::DB::DB; 
 
+use encoding 'utf8'; #чтобы текст понимался русский
+use utf8;
+
 use strict;
 use warnings;
 

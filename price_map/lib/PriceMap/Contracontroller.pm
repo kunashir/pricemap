@@ -5,6 +5,12 @@ use PriceMap::DB::Contra;
 
 use Data::Dumper;
 
+use Encode;
+#use Lingua::DetectCharset;
+#use Convert::Cyrillic;
+use encoding 'utf8'; #чтобы текст понимался русский
+use utf8;
+
 use strict;
 use warnings;
 
@@ -26,7 +32,12 @@ sub operations_contra {
         $cur_con = PriceMap::DB::Contra->new(id => $params->{'id'});
         $cur_con->load;
     }
-    $cur_con->name($params->{'name'});
+    print "Contra name===============>", $params->{'name'};
+    my $name =  $params->{'name'};# decode('ISO-8859-1', $params->{'name'});
+
+    #Encode::_utf8_on($name);
+    #my $name = encode("utf8", $params->{'name'});
+    $cur_con->name_utf($name);
     $cur_con->email($params->{'email'});
     $cur_con->price_path($params->{'price_path'});
     $cur_con->user_id($self->app->session->data('user_id'));
@@ -74,7 +85,7 @@ sub get_index {
 	my $list_contras = [];
 	for my $cur_contra (@$contras)
 	{
-		my $cur_hash_data = {id => $cur_contra->{id}, name => $cur_contra->{name}, email => $cur_contra->{email}, price_path => $cur_contra->{price_path}};
+		my $cur_hash_data = {id => $cur_contra->{id}, name => $cur_contra->name_utf, email => $cur_contra->{email}, price_path => $cur_contra->{price_path}};
 		push $list_contras, $cur_hash_data;
 	}
 
@@ -92,7 +103,7 @@ sub get_index {
         $end_index = $records - 1;
     }
     my $result = {page => $page, total => $total_pages, records => $records , rows => $list_contras};#, rows => @$rows[$start_index..$end_index]};
-	print Dumper $contras;
+	print Dumper $list_contras;
 	return $self->render(
         json => $result
         );

@@ -34,6 +34,8 @@ sub logout {
     my $self = shift;
 
     $self->session( expires => 1 );
+    $self->app->session->data('user_id', '');
+    $self->app->session->flush;
 
     $self->redirect_to('/');
 
@@ -57,8 +59,9 @@ sub  login {
 
     if ( $self->authenticate( $user, $pass ) ) {
 
-        $self->redirect_to('/');
         print "USER_ID".$self->app->session->data('user_id');
+        $self->redirect_to('/');
+        
 
     }
     else {
@@ -69,5 +72,11 @@ sub  login {
 
     }
 
+}
+
+sub is_login {
+    my $self = shift;
+    print "USER_ID in check:".$self->app->session->data('user_id');
+    $self->app->session->data('user_id') ? 1 :  $self->redirect_to('/login_form'); 
 }
 1;

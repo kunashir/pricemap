@@ -7,7 +7,7 @@ var uploader;
 			{   
 				uploader = new qq.FileUploader({
 	            element:$("#upload")[0],
-	            action: '/upload',
+	            action: 'upload',
 	            params: {
 	                action: 35,
 	                contra: $("#contra").val()
@@ -33,7 +33,7 @@ function del_all()
       $.ajax(
       {
         type: "POST",
-        url:  "/del_all",
+        url:  "del_all",
         data: "",
         dataType: "text",
         error:  function(XMLHttpRequest, textStatus, errorThrown)

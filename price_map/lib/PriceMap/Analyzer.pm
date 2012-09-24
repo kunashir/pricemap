@@ -23,18 +23,7 @@ my $IMAGE_BASE = '/uploads';
 #
 #
 
-sub order {
-    my $self = shift;
-    my $data = $self->render_mail('analyzer/order');
-    $self->render($self->mail(
-      mail => {
-        To      => 'korolev@roshen48.ru',
-        Subject => 'Subject',
-        Data    => $data,
-      },
-        )
-    );
-}
+
 
 #формирование сводного заказка
 sub cons_order {
@@ -45,7 +34,7 @@ sub cons_order {
     my $rows = "";
     for ( my $i = 0; $i <= $total_records ; $i++ )
     {
-        my $href = $arr->[$i];    
+        my $href = $arr->[$i];
         if ($href->{count})
         {
             my $cur_row = "<tr><td>".$href->{art}."</td>"."<td>".$href->{name}."</td>"."<td>".$href->{manufact}."</td>"."<td>".$href->{price}.
@@ -271,7 +260,7 @@ sub parser_excel {
         if ($headr_find)
         {
             $cur_row->{id}  = $cur_id;
-            $cur_row->{contra} = $contra->name;
+            $cur_row->{contra} = $contra->name_utf;
             $cur_row->{contra_id} = $contra->id;
             $cur_row->{count} = 0;
             push $my_data, $cur_row;
@@ -400,4 +389,56 @@ sub upload_form {
 	my $self = shift;
     $self->redirect_to('/login') and return 0 unless($self->is_user_authenticated);
 }
+
+sub order {
+    my $self = shift;
+    my $rows = "";
+      
+
+    my $s = $self->app->session;
+    my $arr = $s->data('price_map');
+    my $total_records = scalar @$arr;
+    my $contrs_order = {};
+    for ( my $i = 0; $i <= $total_records ; $i++ )
+    {
+        my $href = $arr->[$i];
+        if ($href->{count})
+        {
+            $contrs_order->{$href->{contra_id}} = [] if (!defined $contrs_order->{$href->{contra_id}});
+            push $contrs_order->{$href->{contra_id}}, $href;
+        }
+    }
+
+    #print Dumper $contrs_order;
+    foreach  my $key (keys %$contrs_order) 
+    {
+        my $contra_obj = PriceMap::DB::Contra->new(id => $key);
+        $contra_obj->load;
+        my $cur_contra = $contrs_order->{$key};
+        $rows = "";
+        for (my $i = 0; $i <= scalar @$cur_contra; $i++)
+        {
+            my $r = $cur_contra->[$i];
+            my $cur_row = "<tr><td>".$r->{art}."</td>"."<td>".$r->{name}."</td>"."<td>".$r->{manufact}."</td>"."<td>".$r->{price}.
+                    "</td>"."<td>".$r->{count}."</td></tr>";
+            $rows .= $cur_row;
+        }
+        $self->stash(table_data => $rows);
+        my $data = $self->render_mail('analyzer/order');
+        $self->render($self->mail(
+                mail => {
+                To      => $contra_obj->email,
+                Subject => 'Subject',
+                Data    => $data,
+                }
+            )
+        );
+    }
+
+    
+    $self->render(
+       text => "sussess:true"
+    );
+}
+
 1;

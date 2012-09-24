@@ -139,6 +139,7 @@ sub startup {
                 
                 $self->flash(message => 'Thanks for logging in.');
                 $self->app->session->data('user_id', $res->{user_id});
+                $self->app->session->flush;
                 return $res->{user_id};
 
             }
@@ -169,17 +170,25 @@ sub startup {
   $r->get('/logout')->to('session#logout');
   $r->get('/signup')->to('session#signup');
   $r->get('/signup_form')->to('session#signup_form');
-  $r->any('/upload_form')->to('analyzer#upload_form');
-  $r->post('/upload')->to('analyzer#upload');
-  $r->any('/show_file')->to('analyzer#show_file');
-  $r->any('/get_data')->to('analyzer#get_data');
-  $r->get('/cons_order')->to('analyzer#cons_order');
-  $r->get('/order')->to('analyzer#order');
-  $r->any('/save_changes')->to('analyzer#save_changes');
-  $r->post('/del_all')->to('analyzer#del_all');
-  $r->any('/index')->to('contracontroller#index');
-  $r->any('/get_index')->to('contracontroller#get_index');
-  $r->post('/operations_contra')->to('contracontroller#operations_contra');
+  
+  my $ra = $r->bridge('/analyzer')->to('session#is_login');
+  $ra->route('/upload_form')->via('get')->to('analyzer#upload_form')->name("upload_form");
+  $ra->route('/upload')->via('post')->to('analyzer#upload')->name("upload");
+  $ra->route('/show_file')->via('get')->to('analyzer#show_file')->name("show_file");
+  $ra->route('/get_data')->via('get')->to('analyzer#get_data')->name("get_data");
+  $ra->route('/cons_order')->via('get')->to('analyzer#cons_order')->name("cons_order");
+  $ra->route('/order')->via('get')->to('analyzer#order')->name("order");
+  $ra->route('/save_changes')->via('post')->to('analyzer#save_changes')->name("save_changes");
+  $ra->route('/del_all')->via('post')->to('analyzer#del_all')->name("del_all");
+  
+  
+  #contra
+  my $rn = $r->bridge('/contras')->to('session#is_login');
+  $rn->route('/index')->via('get')->to('contracontroller#index')->name('contra_index');
+  #$rn->route->via('get')->to('contracontroller#get_index')->name('contras');
+  $rn->route('/get_index')->via('get')->to('contracontroller#get_index');
+  #$r->any('/get_index')->to('contracontroller#get_index');
+  $rn->route('/operations')->via('post')->to('contracontroller#operations_contra');
   #Set server-storable session
   $self->hook(before_dispatch => sub {
     my $c = shift;

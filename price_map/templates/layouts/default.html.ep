@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>
 		  <%= title %>
 		</title>
@@ -10,22 +11,27 @@
 		<!-- <script src="/assets/js/jquery-1.8.0.min.js" type="text/javascript"></script> -->
 
 		    <!-- jqGrid -->
-		<script src="/jqgrid/js/jquery-1.7.2.min.js" type="text/javascript"></script>
-	    <link rel="stylesheet" type="text/css" media="screen" href="/jqgrid/css/ui.jqgrid.css" mce_href="css/ui.jqgrid.css" /> 
+		<%= javascript "/jqgrid/js/jquery-1.7.2.min.js" %> 
+		<link rel="stylesheet" type="text/css" media="screen" href="/jqgrid/css/ui.jqgrid.css" mce_href="css/ui.jqgrid.css" /> 
 	    <script src="/jqgrid/js/i18n/grid.locale-ru.js" type="text/javascript"></script>
 	    <script src="/jqgrid/js/jquery.jqGrid.src.js" type="text/javascript"></script> 
 	    <!--js to ajaxFileUploader -->
 	    <script src="/assets/js/fileuploader.js" type="text/javascript"></script>
 
-	    <link rel="stylesheet" type="text/css" media="screen" href="jquery-ui-1.8.23.custom.css" /> 
-		<link rel="stylesheet" type="text/css" media="screen" href="fileuploader.css" /> 
-
+	    <%= stylesheet '/jquery-ui-1.8.23.custom.css' %>
+	    <!-- <link rel="stylesheet" type="text/css" media="screen" href="jquery-ui-1.8.23.custom.css" /> -->
+	    <%= stylesheet '/fileuploader.css' %>
+	    <%= stylesheet '/custom.css' %>
+		
 	    <!-- jqGrid -->
 	    <script src="/assets/js/application.js" type="text/javascript"></script>
 	</head>
   	<body>
-  	  <a href="/index">Поставщики</a>|<a href="/upload_form">Загрузить прайсы</a>
+  	  
 	  <div class="container">
+	  	<nav class = "round">
+	  		<%= link_to 'Поставщики' => 'contra_index' %>|<%= link_to 'Загрузка прайсов' => 'upload_form'%>
+	  	</nav>
 		<%= content %>
 	  </div>
 

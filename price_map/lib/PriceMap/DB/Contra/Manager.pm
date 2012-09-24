@@ -1,5 +1,8 @@
 package  PriceMap::DB::Contra::Manager;
 
+use encoding 'utf8'; #чтобы текст понимался русский
+use utf8;
+
 use base qw/Rose::DB::Object::Manager/;
 use Data::Dumper;
 
@@ -14,7 +17,7 @@ sub select_tag_data
 	my $list_contras = [];
 	for my $cur_contra (@$contras)
 	{
-		my $cur_hash_data = [$cur_contra->{name} => $cur_contra->{id}];
+		my $cur_hash_data = [$cur_contra->name_utf => $cur_contra->id];
 		push $list_contras, $cur_hash_data;
 	}
 	print Dumper $list_contras;

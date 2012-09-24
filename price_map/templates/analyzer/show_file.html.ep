@@ -8,9 +8,9 @@
 	Наименование<br /> <input type="text" id="item" onkeydown="doSearch(arguments[0]||event)"/>
 	<button onclick="gridReload()" id="submitButton" style="margin-left:30px;">Поиск</button>
 	<input id="order" type = "checkbox" onkeydown="showOrder()"/>Показать позиции для заказа
-	<a href="/cons_order">Сформировать сводный заказ</a>
+	<%= link_to 'Сформировать сводный заказ' => 'cons_order'%>
 </div>
 <br />
-
-<table id="list4"></table>
 <div id="pager2"></div> 
+<table id="list4"></table>
+
