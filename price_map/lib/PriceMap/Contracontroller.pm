@@ -78,9 +78,9 @@ sub get_index {
 	#my $output_text = "";
 	my $cur_user = $self->app->session->data('user_id');
 	my $contras = PriceMap::DB::Contra::Manager->get_contras(
-		# query => [
-		# 	user_id => $cur_user
-		# 	]
+		 query => [
+		 	user_id => $cur_user
+		 	]
 		);
 	my $list_contras = [];
 	for my $cur_contra (@$contras)

@@ -10,7 +10,7 @@ var uploader;
 	            action: 'upload',
 	            params: {
 	                action: 35,
-	                contra: $("#contra").val()
+	                contra: $("#contra_sel").val()
 	            },
 	            multiple: false,
 	            uploadButtonText: 'Загрузить файл',

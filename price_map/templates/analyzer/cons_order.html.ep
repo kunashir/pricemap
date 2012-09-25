@@ -8,3 +8,4 @@
 	</tr>
 	<%== $table_data %>
 </table>
+<%= link_to 'Отправить постащикам' => 'order', class => "signup_button round" %>

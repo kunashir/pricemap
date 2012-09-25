@@ -1,0 +1,4 @@
+% layout 'default';
+% title 'Show file';
+<h1>Справочинк поставщиков:</h1>
+<%= $list %>

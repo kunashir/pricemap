@@ -13,7 +13,12 @@ __PACKAGE__->make_manager_methods('contras');
 sub select_tag_data
 {
 	my $self = shift;
-	my $contras = $self->get_contras();
+	my $cur_user = shift;
+	my $contras = $self->get_contras(
+		 query => [
+		 	user_id => $cur_user
+		 	]
+	);
 	my $list_contras = [];
 	for my $cur_contra (@$contras)
 	{

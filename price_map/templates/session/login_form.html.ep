@@ -1,14 +1,12 @@
 % layout 'default';
 % title 'Login';
-<h1>Log In</h1>
-<% if (my $message = flash 'message' ) { %>
-    <b><%= $message %></b><br>
-<% } %>
+<h1>Вход:</h1>
+
 <%= form_for login => (method => 'post') => begin %>
-    Name: <%= text_field 'name' %>
+    <lable>Логин:</label><br> <%= text_field 'name' %>
     <br>
-    Password: <%= password_field 'pass' %>
+    <label>Пароль:</label><br> <%= password_field 'pass' %>
     <br>
-    <%= submit_button 'Login' %>
+    <%= submit_button 'Войти' %>
 <% end %> 
-<%= link_to signup => 'signup' %>
+<%= link_to Регистрация => 'signup_form' %>

@@ -169,8 +169,12 @@ sub parser_excel {
     my $filename = shift; # имя файла, который будем парсить
     my $id_contra = shift; #имя контрагента чей файл грузим, его тоже положим в данные
     my $contra = PriceMap::DB::Contra->new(id => $id_contra);
-    $contra->load;
-    print Dumper $contra->name;
+    if (!$contra->load( speculative=>1))
+    {
+        $contra->name($id_contra);
+        $contra->user_id($self->app->session->data('user_id'));
+    }
+    #print Dumper $contra->name;
     # Создаем объект-парсер
     my $oExcel  = new Spreadsheet::ParseExcel;
     # code page
@@ -348,16 +352,15 @@ sub upload {
     
 
     my $self = shift;
-    
-    $self->redirect_to('/login') and return 0 unless($self->is_user_authenticated);
-    print "upload WORK!!!!!!!!!!!!!!!!!\n";
-    # Uploaded image(Mojo::Upload object)
-    #print Dumper $self->req->body_params->to_hash;
-    #print Dumper $self->req->content;
 
     my $image = $self->req->body;
     print Dumper  $self->req->body;# $self->req;#->{buffer};#->{asset}; #->{content};
     my $contra = $self->req->query_params->to_hash->{contra};
+    if ($contra)
+    {
+        #Если имя котрагента пустое, то подставим имя файла
+        $contra = $self->req->query_params->to_hash->{qqfile};
+    }
     # Not upload
     unless ($image) {
         return $self->render(
@@ -387,7 +390,8 @@ sub upload {
 
 sub upload_form {
 	my $self = shift;
-    $self->redirect_to('/login') and return 0 unless($self->is_user_authenticated);
+    #$self->redirect_to('/login') and return 0 unless($self->is_user_authenticated);
+    $self->stash(user_id => $self->app->session->data('user_id'));
 }
 
 sub order {

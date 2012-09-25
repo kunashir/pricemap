@@ -44,11 +44,13 @@ sub session{
 }
 
 
-
 # This method will run once at server start
 sub startup {
   my $self = shift;
   $self->secret("sEcrEt"); 
+  $self->helper(is_login => sub {
+    shift->app->session->data('user_id') ? 1 : 0;
+    });
 
   # my $c = PriceMap::DB::Contra->new(id => 1, name => 'stupid contra');
   # $c->save;

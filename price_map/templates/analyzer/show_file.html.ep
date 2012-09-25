@@ -1,11 +1,11 @@
 % layout 'default';
 % title 'Show file';
 
-<h1>Uploading file to analyze</h1>
+<h1>Данные прайсов</h1>
 <div> Поиск:</div>
 <div><input="text" id="search_cd" onkeydown="doSearch(arguments[0]||event)"/> </div>
 <div>
-	Наименование<br /> <input type="text" id="item" onkeydown="doSearch(arguments[0]||event)"/>
+	Наименование(введите начальные буквы для поиска и нажмите Поиск, будет проиведена фильтрация в таблице)<br /> <input type="text" id="item" onkeydown="doSearch(arguments[0]||event)"/>
 	<button onclick="gridReload()" id="submitButton" style="margin-left:30px;">Поиск</button>
 	<input id="order" type = "checkbox" onkeydown="showOrder()"/>Показать позиции для заказа
 	<%= link_to 'Сформировать сводный заказ' => 'cons_order'%>

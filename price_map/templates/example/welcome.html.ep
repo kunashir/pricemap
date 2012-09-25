@@ -3,8 +3,4 @@
 
 <%= $ppp %>
 
-Welcom <%= session 'user' %>!!!
-.<br>
-<%= link_to Logout => 'logout' %>
-<br>
-<%= link_to Upload_form => 'upload_form' %>
+<%= session 'user' %>!!!

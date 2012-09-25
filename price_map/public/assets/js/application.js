@@ -54,6 +54,7 @@ var lastsel_contra;
 				 		
 				); 
  				jQuery("#list4").jqGrid('navGrid','#pager2',{edit:true,add:false,del:false}); 
+ 				jQuery("#list4").jqGrid('bindKeys', {"onEnter":function( rowid ) { alert("You enter a row with id:"+rowid)} } );
  			}
  		); })(jQuery);
 
@@ -129,7 +130,7 @@ var lastsel_contra;
 
 
 var timeoutHnd;
-var flAuto = false;
+var flAuto = true;
 
 
 function gridReload()
@@ -161,8 +162,8 @@ function gridReload()
 
 function enableAutosubmit(state)
 {
-	flAuto = state;
-	jQuery("#submitButton").attr("disabled", state);
+	flAuto = true;
+	jQuery("#submitButton").attr("disabled", flAuto);
 }
 
 function doSearch(ev)
