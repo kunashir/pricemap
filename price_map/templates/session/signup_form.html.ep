@@ -3,10 +3,15 @@
 <h1>Регистрация:</h1>
 
 <%= form_for signup => (method => 'get') => begin %>
-    <label>Логин(имя):</label><br><%= text_field 'name' %>
+    <label>Логин(имя)*:</label><br><%= text_field 'name' %>
     <br>
-    <lable>Пароль:</lable><br> <%= password_field 'pass' %>
+    <label>E-mail*:</label><br><%= text_field 'email' %>
     <br>
+    <label>Компания:</label><br><%= text_field 'company' %>
+    <br>
+    <lable>Пароль*:</lable><br> <%= password_field 'pass' %>
+    <br>
+    <small>Поля  помеченные * обязательны к заполнению!</small>
     <%= submit_button 'Зарегистрироваться' %>
 <% end %>
  

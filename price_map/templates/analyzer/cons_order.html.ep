@@ -1,11 +1,12 @@
 % layout 'default';
 % title 'Upload';
 
-<h1>Общий заказ от <%= localtime() %> </h1> 
-<table>
+<h1>Общий заказ от <%= $order_date %> </h1> 
+<div id="ans"></div>
+<table class="transp" border="1">
 	<tr>
 		<td>Артикул</td><td>Наименование</td><td>Производитель</td><td>Цена</td><td>Поставщик</td><td>Кол-во для заказа</td>
 	</tr>
 	<%== $table_data %>
 </table>
-<%= link_to 'Отправить постащикам' => 'order', class => "signup_button round" %>
+<a href="#" class = "signup_button round" onClick="sendOrder();">Отправить постащикам</a>

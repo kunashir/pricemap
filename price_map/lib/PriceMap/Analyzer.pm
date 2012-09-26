@@ -3,6 +3,7 @@ use warnings;
 package PriceMap::Analyzer;
 use Mojo::Base 'Mojolicious::Controller';
 use PriceMap::DB::Contra; 
+use PriceMap::DB::User; 
 use Data::Dumper;
 use Encode;
 #use Lingua::DetectCharset;
@@ -42,7 +43,10 @@ sub cons_order {
             $rows .= $cur_row;
         }
     }
-
+    (my $sec, my $min,my $hour,my $mday,my $mon,my $year,my $wday,my $yday,my $isdst) = localtime(time);
+    my @abbr = qw( Январь Февраль Март Апрель Май Июнь Июль Август Сентябрь Октябрь Ноябрь Декабрь );
+    my $date = "$mday $abbr[$mon] $year";
+    $self->stash(order_date => $date);
     $self->stash(table_data => $rows);
 }
 
@@ -255,10 +259,10 @@ sub parser_excel {
         }
         else
         {
-            $find_row_nom    = 0;
-            $find_row_price  = 0;
+           # $find_row_nom    = 0;
+           # $find_row_price  = 0;
             #%header_hash = undef;
-            %header_hash = ();
+           # %header_hash = ();
         }
 
         if ($headr_find)
@@ -356,7 +360,7 @@ sub upload {
     my $image = $self->req->body;
     print Dumper  $self->req->body;# $self->req;#->{buffer};#->{asset}; #->{content};
     my $contra = $self->req->query_params->to_hash->{contra};
-    if ($contra)
+    if (!$contra)
     {
         #Если имя котрагента пустое, то подставим имя файла
         $contra = $self->req->query_params->to_hash->{qqfile};
@@ -394,6 +398,31 @@ sub upload_form {
     $self->stash(user_id => $self->app->session->data('user_id'));
 }
 
+sub check_email {
+    my $self = shift;
+    my $contrs_order = shift;
+    my $is_good = 1;
+    my $error_ans = "Следующие котрагенты не имеют email:<br><ul>";
+     foreach  my $key (keys %$contrs_order) 
+    {
+        my $contra_obj = PriceMap::DB::Contra->new(id => $key);
+        $contra_obj->load;
+        if (!$contra_obj->email)
+        {
+            $error_ans .= '<li>'.$contra_obj->name.'</li>';
+            $is_good = 0;
+        }
+    }
+    if (!$is_good)
+    {
+        $error_ans .= "</ul>";
+        $self->render(
+            text =>$error_ans);
+    }
+    return $is_good;
+}
+
+
 sub order {
     my $self = shift;
     my $rows = "";
@@ -413,6 +442,12 @@ sub order {
         }
     }
 
+    if (!$self->check_email($contrs_order)) {
+        # $self->render(
+        #  text => "sussess:false"
+        # );
+       return;
+    }
     #print Dumper $contrs_order;
     foreach  my $key (keys %$contrs_order) 
     {
@@ -427,12 +462,15 @@ sub order {
                     "</td>"."<td>".$r->{count}."</td></tr>";
             $rows .= $cur_row;
         }
+        my $user = PriceMap::DB::User->new(user_id=> $self->app->session->data("user_id"));
+        $user->load;
+        $self->stash(company => decode("utf8", ($user->company || $user->name)) );
         $self->stash(table_data => $rows);
         my $data = $self->render_mail('analyzer/order');
         $self->render($self->mail(
                 mail => {
                 To      => $contra_obj->email,
-                Subject => 'Subject',
+                Subject => 'Заказ от '.decode("utf8",($user->company || $user->name)) ,
                 Data    => $data,
                 }
             )
@@ -441,7 +479,7 @@ sub order {
 
     
     $self->render(
-       text => "sussess:true"
+       text => "<p><b>Заказы отправлены!</b></p>"
     );
 }
 

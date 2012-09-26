@@ -185,6 +185,10 @@ sub startup {
   $ra->route('/del_all')->via('post')->to('analyzer#del_all')->name("del_all");
   
   
+  #user
+  my $ru = $r->bridge('/users')->to('session#is_login');
+  $ru->route('/index')->via('get')->to('usercontroller#index');
+
   #contra
   my $rn = $r->bridge('/contras')->to('session#is_login');
   $rn->route('/index')->via('get')->to('contracontroller#index')->name('contra_index');

@@ -176,4 +176,86 @@ function doSearch(ev)
 }
 
 
+function sendOrder()
+{
+	$.ajax(
+      {
+        type: "GET",
+        url:  "order",
+        data: "",
+        dataType: "text",
+        error:  function(XMLHttpRequest, textStatus, errorThrown)
+        {
+          alert("Ошибка удаления!");
+          //$("#ans").html(result);
+        },
+        success:  function(result)
+        {
+          //alert (result);
+          $("#ans").html(result);
+        }
+    }
+     );
+          
+}
 
+(function($) 
+	{
+  		$(document).ready(
+  			function() 
+  			{
+				 jQuery("#user_table").jqGrid(
+				 	{ 
+				 		url:'get_index', 
+				 		datatype: "json",
+				 		height: 550, 
+				 		width: 800,
+				 		//colNames:['Артикл','Наименование', 'Производитель', 'Цена','Контрагент'], 
+				 		colNames:['Н./п.','Логин', 'E-mail', 'Компания'], 
+				 		colModel:[ 
+				 			{name:'user_id',	index:'user_id',	width:10, sorttype:"int", editable:false, editoptions:{readonly:true, size:10}}, 
+				 			{name:'name',		index:'name',	 	width:50,  editable:false, editoptions:{size:50}}, 
+				 			{name:'email',		index:'email', 		width:20 , editable:false, editoptions:{size:50}}, 
+				 			{name:'company',	index:'company',	width:20, align:"left", editable:false,  editoptions:{size:50}}
+				 			//,
+				 			//{name:'contra',		index:'contra', 		width:80, align:"right",sorttype:"float"}
+				 			],
+				 		rowNum:10, 
+				 		rowList:[10,20,30], 
+				 		pager: '#user_pager', 
+				 		sortname: 'name', 
+				 		viewrecords: true, 
+				 		sortorder: "desc", 
+				 		jsonReader: {
+				 			repeatitems: false, 
+				 			root : "rows",
+				 			page : "page",
+				 			total: "total",
+				 			records : "records",
+				 			id 		: "user_id"
+				 		},	
+				 		
+				 	 	editurl: 'operations',			 		
+				 		caption:"Пользователи системы"
+				 	}
+				 		
+				);
+				//jQuery("#grid_id").jqGrid('navGrid',selector,options,pEdit,pAdd,pDel,pSearch );  
+ 				jQuery("#contra_table").jqGrid('navGrid', '#user', {},
+ 				{false, false, false}, //options 
+ 				{height:280,reloadAfterSubmit:false}, // edit options 
+ 				{height:280,reloadAfterSubmit:false}, // add options 
+ 				{reloadAfterSubmit:false}, // del options 
+ 				{} // search options 
+ 				);
+ 				//jQuery("#contra_table").jqGrid('inlineNav',"#contra_pager");
+ 				//jQuery("#contra_table").jqGrid('editGridRow', lastsel_contra, true );
+ 					// {edit:true,add:true,del:true},
+ 					// {height:280, reloadAfterSubmit:false},
+ 					// {height:280, reloadAfterSubmit:false},
+ 					// {reloadAfterSubmit:false},
+ 					// {}); 
+ 				//jQuery("#grid_id").editGridRow( new);  
+ 				//jQuery("#contra_table").jqGrid('inlineNav',"#contra_table");
+ 			}
+ 		); })(jQuery);

@@ -9,6 +9,8 @@ sub  signup {
 
 	my $user = $self->param('name');
     my $pass = $self->param('pass');
+    my $email = $self->param('email');
+    my $company = $self->param('company');
 	
     if (!$user or !$pass)
     {
@@ -16,21 +18,27 @@ sub  signup {
         $self->redirect_to('/signup_form');
         return;
     }
+    if (!$email)
+    {
+        $self->flash(message => 'Заполните поле e-mail!');
+        $self->redirect_to('/signup_form');
+        return;   
+    }
 
 	my $crypted_pass = $self->bcrypt( $self->param('pass') );
-	my $sth = $self->db->prepare('INSERT INTO user (user_name, user_passwd) VALUES (?, ?)');
+	my $sth = $self->db->prepare('INSERT INTO user (user_name, user_passwd, email) VALUES (?, ?, ?, ?)');
 
-    if ($sth->execute($user, $crypted_pass)) {
+    if ($sth->execute($user, $crypted_pass, $email, $company)) {
 
     #if ( my $res = $sth->fetchrow_hashref ) {
-			$self->flash( message => 'Sign up success!' );
+			$self->flash( message => 'Вы успешно зарегистрированы!' );
 			
 			$self->login($user, $self->param('pass'));
 			$self->redirect_to('/');
             #return $res;
         }
     else {
-			$self->flash( message => 'Sign up error!' );
+			$self->flash( message => 'Ошибка регистрации!' );
             return;
         }
 }; 
@@ -60,6 +68,7 @@ sub  login {
 
     my $self = shift;
 
+    print "IN LOGIN SUB";
     my $user = $self->param('name');
 
     my $pass = $self->param('pass');

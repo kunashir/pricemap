@@ -1,0 +1,5 @@
+% layout 'default';
+% title 'Пользователи;
+<h1>Пользователи системы:</h1>
+<table id="user_table"></table>
+<div id="user_pager"></div> 
