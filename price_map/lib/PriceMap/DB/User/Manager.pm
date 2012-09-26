@@ -3,7 +3,7 @@ package  PriceMap::DB::User::Manager;
 use encoding 'utf8'; #чтобы текст понимался русский
 use utf8;
 
-use base qw/Rose::DB::Object::User/;
+use base qw/Rose::DB::Object::Manager/;
 use Data::Dumper;
 
  sub object_class { 'PriceMap::DB::User' };

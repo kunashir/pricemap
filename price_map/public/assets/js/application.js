@@ -241,8 +241,8 @@ function sendOrder()
 				 		
 				);
 				//jQuery("#grid_id").jqGrid('navGrid',selector,options,pEdit,pAdd,pDel,pSearch );  
- 				jQuery("#contra_table").jqGrid('navGrid', '#user', {},
- 				{false, false, false}, //options 
+ 				jQuery("#user_table").jqGrid('navGrid', '#user_pager', {},
+ 				{edit:false, add:false, del:false}, //options 
  				{height:280,reloadAfterSubmit:false}, // edit options 
  				{height:280,reloadAfterSubmit:false}, // add options 
  				{reloadAfterSubmit:false}, // del options 

@@ -5,6 +5,8 @@ use utf8;
 
 use base 'PriceMap::DB::Object';
 
+use Encode;
+
 use strict;
 use warnings;
 
@@ -25,11 +27,11 @@ sub name_utf {
   if ($new_name) #работаем как сеттор
   {
     $new_name = encode("utf8", $new_name);
-    return $self->name($new_name);
+    return $self->user_name($new_name);
   }
   else
   {
-    return decode("utf8", $self->name());
+    return decode("utf8", $self->user_name());
   }
 }
 

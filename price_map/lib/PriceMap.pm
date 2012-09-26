@@ -188,6 +188,7 @@ sub startup {
   #user
   my $ru = $r->bridge('/users')->to('session#is_login');
   $ru->route('/index')->via('get')->to('usercontroller#index');
+  $ru->route('/get_index')->via('get')->to('usercontroller#get_index');
 
   #contra
   my $rn = $r->bridge('/contras')->to('session#is_login');
