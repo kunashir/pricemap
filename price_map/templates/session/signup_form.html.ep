@@ -1,14 +1,12 @@
 % layout 'default';
 % title 'Sign up';
-<h1>Sign up</h1>
-<% if (my $message = flash 'message' ) { %>
-    <b><%= $message %></b><br>
-<% } %>
+<h1>Регистрация:</h1>
+
 <%= form_for signup => (method => 'get') => begin %>
-    Name: <%= text_field 'name' %>
+    <label>Логин(имя):</label><br><%= text_field 'name' %>
     <br>
-    Password: <%= password_field 'pass' %>
+    <lable>Пароль:</lable><br> <%= password_field 'pass' %>
     <br>
-    <%= submit_button 'Sign up' %>
+    <%= submit_button 'Зарегистрироваться' %>
 <% end %>
  

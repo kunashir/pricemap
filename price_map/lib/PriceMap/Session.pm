@@ -8,8 +8,15 @@ sub  signup {
 	my $self = shift;
 
 	my $user = $self->param('name');
-    #my $pass = $self->param('pass') || q{};
-	print $user;
+    my $pass = $self->param('pass');
+	
+    if (!$user or !$pass)
+    {
+        $self->flash(message => 'Ни Пароль ни логин не могут быть пустыми!');
+        $self->redirect_to('/signup_form');
+        return;
+    }
+
 	my $crypted_pass = $self->bcrypt( $self->param('pass') );
 	my $sth = $self->db->prepare('INSERT INTO user (user_name, user_passwd) VALUES (?, ?)');
 
@@ -53,9 +60,9 @@ sub  login {
 
     my $self = shift;
 
-    my $user = $self->param('name') || q{};
+    my $user = $self->param('name');
 
-    my $pass = $self->param('pass') || q{};
+    my $pass = $self->param('pass');
 
     if ( $self->authenticate( $user, $pass ) ) {
 
