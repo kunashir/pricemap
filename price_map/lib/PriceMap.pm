@@ -48,7 +48,7 @@ sub session{
 sub startup {
   my $self = shift;
   $self->secret("sEcrEt"); 
-  $self->config('JSONConfig');
+  $self->plugin('JSONConfig');
   $self->helper(is_login => sub {
     shift->app->session->data('user_id') ? 1 : 0;
     });
