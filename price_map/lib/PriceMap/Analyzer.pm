@@ -187,8 +187,9 @@ sub parser_excel {
     my $oExcel  = new Spreadsheet::ParseExcel;
     # code page
     my $oFmtR   = Spreadsheet::ParseExcel::FmtUnicode->new (Unicode_Map => "CP1251");
-    # print Dumper $oExcel;
+    
     my $oBook   = $oExcel->Parse($filename, $oFmtR);
+     print Dumper $oExcel;
     # choice sheet
     my $oWks    = $oBook->{Worksheet}[0];
    # print Dumper $oBook;
@@ -401,8 +402,9 @@ sub upload {
     print CURFILE $image;
     #my $image_file = $full_path; #"$IMAGE_BASE/" . $image->filename;
     
+    close (CURFILE);
+    $self->parser_excel($full_path, $contra, $nom_col, $price_col, $first_row, $manuf_col);
 
-    $self->parser_excel($full_path, $contra, $nom_col, $price_col, $manuf_col);
 
     # Redirect to top page
     #$self->redirect_to('show_file');
