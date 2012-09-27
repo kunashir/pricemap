@@ -10,7 +10,11 @@ var uploader;
 	            action: 'upload',
 	            params: {
 	                action: 35,
-	                contra: $("#contra_sel").val()
+	                contra: $("#contra_sel").val(),
+                  nom_row: 0,
+                  price_row: 0,
+                  first_row: 0,
+                  manuf_col: 0
 	            },
 	            multiple: false,
 	            uploadButtonText: 'Загрузить файл',
@@ -24,7 +28,8 @@ var uploader;
 
 function setNewParams ()
 {
-	uploader.setParams( {contra: $("#contra_sel").val()});
+	uploader.setParams( {contra: $("#contra_sel").val(), nom_col: $("#nom_col").val(), price_col: $("#price_col").val(), 
+                    first_row: $("#first_row").val(), manuf_col: $("#manuf_col").val() });
 }
 
 function del_all()
@@ -61,6 +66,6 @@ function del_all()
               
                   
               });
-        
+      
     });
   })(jQuery);

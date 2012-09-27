@@ -6,7 +6,10 @@
 	<div id="server_ans"> </div>
 	<% use PriceMap::DB::Contra::Manager; %>
 	<div> <%= select_field contra => PriceMap::DB::Contra::Manager->select_tag_data($user_id), id => "contra_sel"; %>
- 	
+	<br><label>Колонка с номенклатурой:</label><br><input id="nom_col" onBlur = "setNewParams();" />
+	<br><label>Колонка с ценой:</label><br><input id="price_col" onBlur = "setNewParams();" />
+	<br><label>Первая строка:</label><br><input  id="first_row" onBlur = "setNewParams();" /> 	
+	<br><label>Колонка с производ.:</label><br><input  id="manuf_col" onBlur = "setNewParams();" /> 
 
     <div id="upload"> </div>
     <%= link_to "К работе!" => "show_file", class => "signup_button round" %>

@@ -199,6 +199,31 @@ function sendOrder()
           
 }
 
+
+function Send_letter()
+{
+	$.ajax(
+      {
+        type: "POST",
+        url:  "feedback",
+        data: $("#body_letter").val(),
+        dataType: "text",
+        error:  function(XMLHttpRequest, textStatus, errorThrown)
+        {
+          alert("Ошибка удаления!");
+          //$("#ans").html(result);
+        },
+        success:  function(result)
+        {
+          //alert (result);
+          $("#ans_letter").html(result);
+        }
+    }
+     );
+          
+}
+
+
 (function($) 
 	{
   		$(document).ready(

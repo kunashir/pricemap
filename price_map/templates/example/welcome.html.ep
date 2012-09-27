@@ -4,3 +4,7 @@
 <%= $ppp %>
 
 <%= session 'user' %>!!!
+<div id = "ans_letter"></div>
+<p> Нашли ошибки, есть пожелание - напишите нам: </p>
+<textarea id = 'body_letter'>Пишите здесь...</textarea><br>
+<button onclick="Send_letter();" id="send_letter" style="margin-left:30px;">Отправить</button>

@@ -170,8 +170,12 @@ sub parser_excel {
     my $self    = shift;
 
     print "paser work!";
-    my $filename = shift; # имя файла, который будем парсить
-    my $id_contra = shift; #имя контрагента чей файл грузим, его тоже положим в данные
+    my $filename    = shift; # имя файла, который будем парсить
+    my $id_contra   = shift; #имя контрагента чей файл грузим, его тоже положим в данные
+    my $nom_col     = shift ;
+    my $price_col   = shift ;
+    my $first_row   = shift ;
+    my $manuf_col   = shift;
     my $contra = PriceMap::DB::Contra->new(id => $id_contra);
     if (!$contra->load( speculative=>1))
     {
@@ -182,12 +186,14 @@ sub parser_excel {
     # Создаем объект-парсер
     my $oExcel  = new Spreadsheet::ParseExcel;
     # code page
-    my $oFmtR   = Spreadsheet::ParseExcel::FmtUnicode->new(Unicode_Map => "CP1251");
-
+    my $oFmtR   = Spreadsheet::ParseExcel::FmtUnicode->new (Unicode_Map => "CP1251");
+    # print Dumper $oExcel;
     my $oBook   = $oExcel->Parse($filename, $oFmtR);
     # choice sheet
     my $oWks    = $oBook->{Worksheet}[0];
+   # print Dumper $oBook;
     my $headr_find      = 0;
+
     
     my $s = $self->app->session;
     my $my_data = $s->data('price_map');    
@@ -203,12 +209,21 @@ sub parser_excel {
     }
     my %header_hash = ();
 
+
+    if ($nom_col && $price_col)
+    {
+        $headr_find = 1;
+        $header_hash{$nom_col} = "name";
+        $header_hash{$price_col} = "price";
+        $header_hash{$manuf_col} = "manufact";
+    }
     my $find_row_nom    = 0;
     my $find_row_price  = 0;
 
-    for (my $i = 0; $i <= $oWks->{MaxRow} ; $i++) #
+
+    for (my $i = $first_row; $i <= $oWks->{MaxRow} ; $i++) #
     {
-        my $is_header = 0;
+        #my $is_header = 0;
         
         my $cur_row = {};
         for (my $j = 0; $j <= 20; $j++)
@@ -219,7 +234,8 @@ sub parser_excel {
             {
                 next;
             }
-            my $val = decode('cp1251', $cur_val->Value);
+            my $val = decode('CP1251', $cur_val->Value);
+            #print $val;
             if (!$headr_find && $cur_val)
             {
                 #my $val = $cur_val->Value;
@@ -358,8 +374,12 @@ sub upload {
     my $self = shift;
 
     my $image = $self->req->body;
-    print Dumper  $self->req->body;# $self->req;#->{buffer};#->{asset}; #->{content};
+    #print Dumper  $self->req->body;# $self->req;#->{buffer};#->{asset}; #->{content};
     my $contra = $self->req->query_params->to_hash->{contra};
+    my $nom_col = $self->req->query_params->to_hash->{nom_col} || 0;
+    my $price_col = $self->req->query_params->to_hash->{price_col} || 0;
+    my $first_row = $self->req->query_params->to_hash->{first_row} || 0;
+    my $manuf_col = $self->req->query_params->to_hash->{manuf_col} || 0;
     if (!$contra)
     {
         #Если имя котрагента пустое, то подставим имя файла
@@ -382,7 +402,7 @@ sub upload {
     #my $image_file = $full_path; #"$IMAGE_BASE/" . $image->filename;
     
 
-    $self->parser_excel($full_path, $contra);
+    $self->parser_excel($full_path, $contra, $nom_col, $price_col, $manuf_col);
 
     # Redirect to top page
     #$self->redirect_to('show_file');

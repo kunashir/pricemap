@@ -167,6 +167,8 @@ sub startup {
   my $r = $self->routes;
 
   # Normal route to controller
+  my $rr = $r->bridge('/')->to('session#is_login');
+  $rr->route('/feedback')->via('post')->to('example#feedback');
   $r->get('/')->to('example#welcome');
   $r->get('/login_form')->to('session#login_form');
   $r->any('/login')->to('session#login');
