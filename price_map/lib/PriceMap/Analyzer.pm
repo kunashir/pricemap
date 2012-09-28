@@ -45,6 +45,7 @@ sub cons_order {
     }
     (my $sec, my $min,my $hour,my $mday,my $mon,my $year,my $wday,my $yday,my $isdst) = localtime(time);
     my @abbr = qw( Январь Февраль Март Апрель Май Июнь Июль Август Сентябрь Октябрь Ноябрь Декабрь );
+    $year += 1900;
     my $date = "$mday $abbr[$mon] $year";
     $self->stash(order_date => $date);
     $self->stash(table_data => $rows);
@@ -102,12 +103,13 @@ sub get_data {
         {
             my $href = $arr->[$i];
             
-           
-                if ( $href->{name} =~ m/$nm_mask/i)
+                #print Dumper $arr;#'regex:'.$href->{name}.' '.$href->{manufact};
+                if ( (($href->{name}.' '.$href->{manufact}) =~ m/$nm_mask/i) ||  ( ($href->{manufact}.' '.$href->{name}) =~ m/$nm_mask/i))
                 {
                     #если значение удолетворяет маске, то добавим в выборку
                     push $rows,  $href;#\@cur_arr};
                 }
+
               
         }
         
@@ -176,6 +178,9 @@ sub parser_excel {
     my $price_col   = shift ;
     my $first_row   = shift ;
     my $manuf_col   = shift;
+    my $art_col     = shift;
+    my $balance_col = shift;
+
     my $contra = PriceMap::DB::Contra->new(id => $id_contra);
     if (!$contra->load( speculative=>1))
     {
@@ -214,9 +219,11 @@ sub parser_excel {
     if ($nom_col && $price_col)
     {
         $headr_find = 1;
-        $header_hash{$nom_col} = "name";
-        $header_hash{$price_col} = "price";
-        $header_hash{$manuf_col} = "manufact";
+        $header_hash{$nom_col}      = "name";
+        $header_hash{$price_col}    = "price";
+        $header_hash{$manuf_col}    = "manufact";
+        $header_hash{$art_col}      = "art";
+        $header_hash{$balance_col}  = "balace";
     }
     my $find_row_nom    = 0;
     my $find_row_price  = 0;
@@ -253,6 +260,7 @@ sub parser_excel {
                 }
                 $header_hash{$j} = "manufact" if ($val =~ m/(Фирма|Производитель)/i);
                 $header_hash{$j} = "art" if ($val =~ m/(Код|Артикл)/i);
+                $header_hash{$j} = "balace" if ($val =~ m/Остаток/i); #TODO: возможно стоит добавить другие варианты
                 #$header_hash{$j} = $val;
                 #$self->stash('price_map')->{$val} = [];
                 #$is_header = 1;

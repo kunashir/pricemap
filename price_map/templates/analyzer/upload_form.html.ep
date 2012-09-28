@@ -3,6 +3,7 @@
 
 <h1>Загрузка прайсов</h1>
 	<p> На данной странице вы можете загружать прайсы контрагентов. После тогда как загрузили все прайсы, с которыми предполагается пработать, перейдите по ссылке "К работе!" </p>
+	<p><b>Если Вы не заполните поля, в которых находятся нужные данные будет осуществленна попытка автоматически их определить!</b></p>
 	<div id="server_ans"> </div>
 	<% use PriceMap::DB::Contra::Manager; %>
 	<div> <%= select_field contra => PriceMap::DB::Contra::Manager->select_tag_data($user_id), id => "contra_sel"; %>
@@ -10,6 +11,9 @@
 	<br><label>Колонка с ценой:</label><br><input id="price_col" onBlur = "setNewParams();" />
 	<br><label>Первая строка:</label><br><input  id="first_row" onBlur = "setNewParams();" /> 	
 	<br><label>Колонка с производ.:</label><br><input  id="manuf_col" onBlur = "setNewParams();" /> 
+	<br><label>Колонка с артикулом.:</label><br><input  id="art_col" onBlur = "setNewParams();" /> 
+	<br><label>Колонка с остатком.:</label><br><input  id="balance_col" onBlur = "setNewParams();" /> 
+		
 
     <div id="upload"> </div>
     <%= link_to "К работе!" => "show_file", class => "signup_button round" %>

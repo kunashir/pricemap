@@ -12,7 +12,7 @@ var lastsel_contra;
 				 		height: 550, 
 				 		width: 800,
 				 		//colNames:['Артикл','Наименование', 'Производитель', 'Цена','Контрагент'], 
-				 		colNames:['Н./п.','Артикл','Наименование', 'Производитель', 'Цена', 'Контрагент', 'Кол-во для заказа', 'id_contra'], 
+				 		colNames:['Н./п.','Артикл','Наименование', 'Производитель', 'Цена', 'Контрагент', 'Кол-во для заказа', 'id_contra', 'На складе'], 
 				 		colModel:[ 
 				 			{name:'id',			index:'id', 		width:10, sorttype:"int"}, 
 				 			{name:'art',		index:'art', 		width:10, sorttype:"int"}, 
@@ -21,7 +21,8 @@ var lastsel_contra;
 				 			{name:'price',		index:'price', 		width:20, align:"right",sorttype:"float"},
 				 			{name:'contra',		index:'contra', 	width:50, align:"right",sorttype:"float"},
 				 			{name:'count',		index:'count', 		width:10, align:"left", sorttype:"float", editable:true},
-				 			{name:'id_contra',	index:'id_contra',	width:10, align:"left", sorttype:"float", hidden:true}
+				 			{name:'id_contra',	index:'id_contra',	width:10, align:"left", sorttype:"float", hidden:true},
+				 			{name:'balance',	index:'balance',	width:10, align:"left", sorttype:"float"}
 				 			//,
 				 			//{name:'contra',		index:'contra', 		width:80, align:"right",sorttype:"float"}
 				 			],
