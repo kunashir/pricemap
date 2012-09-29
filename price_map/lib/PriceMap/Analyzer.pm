@@ -219,11 +219,11 @@ sub parser_excel {
     if ($nom_col && $price_col)
     {
         $headr_find = 1;
-        $header_hash{$nom_col}      = "name";
-        $header_hash{$price_col}    = "price";
-        $header_hash{$manuf_col}    = "manufact";
-        $header_hash{$art_col}      = "art";
-        $header_hash{$balance_col}  = "balace";
+        $header_hash{$nom_col - 1}      = "name";
+        $header_hash{$price_col - 1}    = "price";
+        $header_hash{$manuf_col - 1}    = "manufact";
+        $header_hash{$art_col - 1}      = "art";
+        $header_hash{$balance_col - 1}  = "balace";
     }
     my $find_row_nom    = 0;
     my $find_row_price  = 0;
@@ -389,6 +389,10 @@ sub upload {
     my $price_col = $self->req->query_params->to_hash->{price_col} || 0;
     my $first_row = $self->req->query_params->to_hash->{first_row} || 0;
     my $manuf_col = $self->req->query_params->to_hash->{manuf_col} || 0;
+    my $art_col = $self->req->query_params->to_hash->{art_col} || 0;
+    my $balance_col = $self->req->query_params->to_hash->{balance_col} || 0;
+
+
     if (!$contra)
     {
         #Если имя котрагента пустое, то подставим имя файла
@@ -411,7 +415,7 @@ sub upload {
     #my $image_file = $full_path; #"$IMAGE_BASE/" . $image->filename;
     
     close (CURFILE);
-    $self->parser_excel($full_path, $contra, $nom_col, $price_col, $first_row, $manuf_col);
+    $self->parser_excel($full_path, $contra, $nom_col, $price_col, $first_row, $manuf_col, $art_col, $balance_col);
 
 
     # Redirect to top page
