@@ -19,7 +19,7 @@ sub select_tag_data
 		 	user_id => $cur_user
 		 	]
 	);
-	my $list_contras = [];
+	my $list_contras = [['Выберите поставщика' => -1]];
 	for my $cur_contra (@$contras)
 	{
 		my $cur_hash_data = [$cur_contra->name_utf => $cur_contra->id];

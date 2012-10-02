@@ -71,12 +71,19 @@ var lastsel_contra;
 				 		height: 550, 
 				 		width: 800,
 				 		//colNames:['Артикл','Наименование', 'Производитель', 'Цена','Контрагент'], 
-				 		colNames:['Н./п.','Наименование', 'E-mail', 'Путь к прайсу'], 
+				 		colNames:['Н./п.','Наименование', 'E-mail', 'Путь к прайсу', 'Кол. ном.', 'Кол. цены', 'Первая строка', 'Кол. проивз.', 'Кол. артикула', 
+				 		'Кол. остатка'], 
 				 		colModel:[ 
 				 			{name:'id',			index:'id', 		width:10, sorttype:"int", editable:false, editoptions:{readonly:true, size:10}}, 
 				 			{name:'name',		index:'name',	 	width:50,  editable:true, editoptions:{size:50}}, 
 				 			{name:'email',		index:'email', 		width:20 , editable:true, editoptions:{size:50}}, 
-				 			{name:'price_path',	index:'price_path',	width:20, align:"left", editable:true, edittype:'file', editoptions:{size:150}}
+				 			{name:'price_path',	index:'price_path',	width:20, align:"left", editable:true, edittype:'file', editoptions:{size:150}},
+				 			{name:'nom_col',	index:'nom_col',	width:20 , editable:true, editoptions:{size:50}}, 
+				 			{name:'price_col',	index:'price_col',	width:20 , editable:true, editoptions:{size:50}}, 
+				 			{name:'first_row',	index:'first_row',	width:20 , editable:true, editoptions:{size:50}}, 
+				 			{name:'manuf_col',	index:'manuf_col',	width:20 , editable:true, editoptions:{size:50}}, 
+				 			{name:'art_col',	index:'art_col',	width:20 , editable:true, editoptions:{size:50}}, 
+				 			{name:'balance_col',index:'balance_col',width:20 , editable:true, editoptions:{size:50}}
 				 			//,
 				 			//{name:'contra',		index:'contra', 		width:80, align:"right",sorttype:"float"}
 				 			],

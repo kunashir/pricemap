@@ -34,10 +34,10 @@ sub session{
       #store     => Life25::MojoX::Session::Store::Dummy->new,
       transport => MojoX::Session::Transport::Cookie->new,
       ip_match  => 1,
-      expires_delta => 3600,
+      expires_delta => 3600*24,
       
     );
-    $_session->expires(3600);
+    $_session->expires(3600*24);
   }
 
   return $_session;
@@ -185,7 +185,7 @@ sub startup {
   $ra->route('/order')->via('get')->to('analyzer#order')->name("order");
   $ra->route('/save_changes')->via('post')->to('analyzer#save_changes')->name("save_changes");
   $ra->route('/del_all')->via('post')->to('analyzer#del_all')->name("del_all");
-  
+  $ra->route('/price_param')->via('get')->to('analyzer#price_param');  
   
   #user
   my $ru = $r->bridge('/users')->to('session#is_login');
@@ -199,6 +199,7 @@ sub startup {
   $rn->route('/get_index')->via('get')->to('contracontroller#get_index');
   #$r->any('/get_index')->to('contracontroller#get_index');
   $rn->route('/operations')->via('post')->to('contracontroller#operations_contra');
+
   #Set server-storable session
   $self->hook(before_dispatch => sub {
     my $c = shift;

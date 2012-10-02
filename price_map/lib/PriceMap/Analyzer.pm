@@ -517,4 +517,19 @@ sub order {
     );
 }
 
+sub price_param {
+    my $self = shift;
+    my $params = $self->req->query_params->to_hash();
+    if ($params->{'contra'} == -1)
+    {
+        return $self->render(
+            json => {});
+    }
+    my $cur_con = PriceMap::DB::Contra->new(id => $params->{'contra'});   
+    $cur_con->load;
+    return $self->render(
+        json => {nom_col => $cur_con->nom_col, price_col => $cur_con->price_col, first_row => $cur_con->first_row, manuf_col => $cur_con->manuf_col, 
+                    art_col => $cur_con->art_col, balance_col => $cur_con->balance_col});
+}
+
 1;

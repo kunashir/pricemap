@@ -40,6 +40,12 @@ sub operations_contra {
     $cur_con->name_utf($name);
     $cur_con->email($params->{'email'});
     $cur_con->price_path($params->{'price_path'});
+    $cur_con->nom_col($params->{'nom_col'});
+    $cur_con->price_col($params->{'price_col'});
+    $cur_con->first_row($params->{'first_row'});
+    $cur_con->manuf_col($params->{'manuf_col'});
+    $cur_con->art_col($params->{'art_col'});
+    $cur_con->balance_col($params->{'balance_col'});
     $cur_con->user_id($self->app->session->data('user_id'));
     if ($cur_con->save)
     {
@@ -85,7 +91,9 @@ sub get_index {
 	my $list_contras = [];
 	for my $cur_contra (@$contras)
 	{
-		my $cur_hash_data = {id => $cur_contra->{id}, name => $cur_contra->name_utf, email => $cur_contra->{email}, price_path => $cur_contra->{price_path}};
+		my $cur_hash_data = {id => $cur_contra->{id}, name => $cur_contra->name_utf, email => $cur_contra->{email}, price_path => $cur_contra->{price_path}, 
+            nom_col => $cur_contra->{nom_col}, price_col => $cur_contra->{price_col}, first_row => $cur_contra->{first_row}, manuf_col => $cur_contra->{manuf_col},
+            art_col => $cur_contra->{art_col}, balance_col => $cur_contra->{balance_col}};
 		push $list_contras, $cur_hash_data;
 	}
 
@@ -108,6 +116,7 @@ sub get_index {
         json => $result
         );
 }
+
 
 1;
  

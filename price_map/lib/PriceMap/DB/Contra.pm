@@ -18,7 +18,7 @@ use warnings;
 __PACKAGE__->meta->setup
     (
       table      => 'contra',
-      columns    => [ qw(id name email price_path user_id) ],
+      columns    => [ qw(id name email price_path user_id nom_col price_col first_row manuf_col art_col balance_col) ],
       pk_columns => 'id',
       unique_key => 'name',
       foreign_keys => [
