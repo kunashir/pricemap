@@ -210,10 +210,15 @@ function sendOrder()
 
 function Send_letter()
 {
+	if (!$("#back_address").val())
+	{
+		$("#ans_letter").html("<h1>Вы не ввели обратный адес!</h1>");
+		return;
+	}
 	$.ajax(
       {
         type: "POST",
-        url:  "feedback",
+        url:  "feedback?"+'subject='+$("#subject").val()+"&back_address="+$("#back_address").val(),
         data: $("#body_letter").val(),
         dataType: "text",
         error:  function(XMLHttpRequest, textStatus, errorThrown)
@@ -225,6 +230,8 @@ function Send_letter()
         {
           //alert (result);
           $("#ans_letter").html(result);
+          $("#body_letter").val('');
+          $("#subject").val('');
         }
     }
      );

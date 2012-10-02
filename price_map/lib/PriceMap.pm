@@ -18,6 +18,11 @@ use MojoX::Session;
 use MojoX::Session::Store::Dbi;
 use MojoX::Session::Store::File;
 use PriceMap::DB::Contra;
+use Encode;
+use encoding 'utf8'; #чтобы текст понимался русский
+use utf8;
+use PriceMap::DB::User;
+
 
 #Singleton Mojox::Session
 my $_session;
@@ -52,7 +57,17 @@ sub startup {
   $self->helper(is_login => sub {
     shift->app->session->data('user_id') ? 1 : 0;
     });
-
+  $self->helper( user_mail => sub {
+    my $self = shift;
+    my $user_id  = $self->app->session->data('user_id');
+    if ($user_id)
+    {
+      my $user = PriceMap::DB::User->new(user_id =>$user_id);
+      $user->load;
+      return $user->email;
+    }
+    return '';
+    });
   # my $c = PriceMap::DB::Contra->new(id => 1, name => 'stupid contra');
   # $c->save;
   #$self->plugin('digest_auth', allow => {'Admin' => {sshaw => 'mu_pass'}});
@@ -140,7 +155,7 @@ sub startup {
                 # flash.
                 #
                 
-                $self->flash(message => 'Thanks for logging in.');
+                #$self->flash(message =>  encode("utf8",'Спасибо за то, что вошли.'));
                 $self->app->session->data('user_id', $res->{user_id});
                 $self->app->session->flush;
                 return $res->{user_id};
@@ -169,6 +184,7 @@ sub startup {
   # Normal route to controller
   my $rr = $r->bridge('/')->to('session#is_login');
   $rr->route('/feedback')->via('post')->to('example#feedback');
+  $rr->route('/send_mail')->via('get')->to('example#send_mail')->name("send_mail");
   $r->get('/')->to('example#welcome');
   $r->get('/login_form')->to('session#login_form');
   $r->any('/login')->to('session#login');

@@ -32,13 +32,14 @@ sub welcome {
 sub feedback {
 	my $self = shift;
 	my $data = $self->req->body;
-
+	my $POST = $self->req->body_params->to_hash();
+ 	my $GET = $self->req->query_params->to_hash();
 	$self->stash(body=>decode("utf8",$data));
 	my $letter_data = $self->render_mail('example/feedback');
 	$self->render($self->mail(
                 mail => {
                 To      => 'support@apteka-s.ru',
-                Subject => 'Fuck!' ,
+                Subject => $GET->{'subject'}.' от '.$GET->{'back_address'},
                 Data    => $letter_data,
                 }
             )

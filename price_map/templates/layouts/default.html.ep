@@ -2,6 +2,15 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		 <meta content="Анализ прайс-листов он-лайн." name=description>
+		<meta content="Анализ прайс-листов прайсов он-лайн online прайс лист поставщики цены" name=keywords>
+		<meta content=Index name=robots>
+		<meta content=Follow name=robots>
+		<meta content=General name=rating>
+		<meta content=GLOBAL name=distribution>
+		<meta content=document name=resource-type>
+		<meta content="Королев А.Н." name="author">
+		<meta content="Бойко В.Н., Давыденко В.В., Королев А.Н."  name="copyright">
 		<title>
 		  <%= title %>
 		</title>
@@ -32,15 +41,20 @@
   		  	<a href='/'> <%= image '/logo_lines.png' %></a>
 	  	   	<nav class = "round">
 	  	   		<ul>
-	  			<li><%= link_to 'Поставщики' => 'contra_index' %></li>
-	  			<li><%= link_to 'Загрузка прайсов' => 'upload_form'%></li>
-	  			<li>
+	  			
+	  			<li><%= link_to 'Связь и поддрежка' => 'send_mail' %></li>
 	  			<% if (is_login ) { %>
-	  			<%= link_to 'Выход' => 'logout' %>
+	  				<li><%= link_to 'Поставщики' => 'contra_index' %></li>
+	  				<li><%= link_to 'Загрузка прайсов' => 'upload_form'%></li>
+	  				<li>
+	  					<%= link_to 'Выход' => 'logout' %>
+	  				</li>
 	  			<% }else { %>
-	  			<%= link_to 'Вход' => 'login' %>
+	  				<li>
+	  					<%= link_to 'Вход' => 'login' %>
+	  				</li>
 	  			<% } %>
-	  			</li>
+	  			
 	  		</ul>
 	  		</nav>
 	  	</header>
@@ -50,6 +64,14 @@
 	  	<section class="round">
 			<%= content %>
 		</section>
+		<footer>
+			<nav class="round">
+			<ul>
+				<li><%= link_to 'Связь и поддрежка' => 'send_mail' %></li>
+				<li><%= link_to 'Сервис для аптек' => 'http://apteka-s.ru' %></li>
+			<ul>
+			</nav>
+		</footer>
 	  </div>
 
 	</body>
