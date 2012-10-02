@@ -5,6 +5,10 @@ use Encode;
 #use Convert::Cyrillic;
 use encoding 'utf8'; #чтобы текст понимался русский
 use utf8;
+
+sub send_mail {
+	
+}
 # This action will render a template
 sub welcome {
 	my $self = shift;
