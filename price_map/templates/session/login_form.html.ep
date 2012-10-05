@@ -1,12 +1,30 @@
 % layout 'default';
 % title 'Login';
-<h1>Вход:</h1>
 
-<%= form_for login => (method => 'post') => begin %>
-    <lable>Логин:</label><br> <%= text_field 'name' %>
-    <br>
-    <label>Пароль:</label><br> <%= password_field 'pass' %>
-    <br>
-    <%= submit_button 'Войти' %>
-<% end %> 
-<%= link_to Регистрация => 'signup_form' %>
+<table class="profile" summary="Profile information">
+  <tr>
+    <td class="main">
+    	<h1 align="center">Поиск лучшей цены - с нами это просто!</h1>
+		<div class='main_col'>
+			<p > Сайт предназначен для автоматизированной обработки прайс-листов и формирования заказов поставщикам. </p>
+			<p> Мы поможем вам избавится от рутинных действий, связанных с  поиском самой низкой цены. 
+			</p>
+			<div align="center"><%= image '/schema5.png' %></div>
+		</div>
+	</td>
+	 <td class="sidebar">
+		<div class='right_col'>
+			<h1>Вход:</h1>
+			<%= form_for login => (method => 'post') => begin %>
+    		<label>Логин:</label><br> <%= text_field 'name' %>
+		    <br>
+		    <label>Пароль:</label><br> <%= password_field 'pass' %>
+		    <br>
+		    <%= submit_button 'Войти' %>
+			<% end %> 
+			<%= link_to Регистрация => 'signup_form' %><br>
+			<p><small>(Для теста просто нажмие Войти с пустыми полями логина и пароля, но справочник клиентов будет общедоступный.)</small></p>
+		</div>
+	</td>
+	</tr>
+</table>

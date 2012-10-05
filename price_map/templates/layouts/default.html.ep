@@ -71,7 +71,7 @@
 			<ul>
 				<li><%= link_to 'Связь и поддрежка' => 'send_mail' %></li>
 				<li><%= link_to 'Сервис для аптек' => 'http://apteka-s.ru' %></li>
-			<ul>
+			</ul>
 			</nav>
 		</footer>
 	  </div>

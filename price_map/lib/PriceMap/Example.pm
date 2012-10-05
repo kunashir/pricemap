@@ -27,7 +27,7 @@ sub welcome {
     {
   #return unless $self->digest_auth(allow => {sshaw => 'mu_pass'});
   # Render template "example/welcome.html.ep" with message
-		$m = "Добро пожаловать,";
+		$m = "Добро пожаловать";
 	}
 	$self->stash(ppp=>$m);
 }

@@ -6,6 +6,7 @@
 	<p><b>Если Вы не заполните поля, в которых находятся нужные данные будет осуществленна попытка автоматически их определить!</b></p>
 	<p> При указании параметров таблицы прайса следует указывать порядковый номер колонки на листе Excel(см. <%= link_to 'пример'
 	=> '/price1.png' %>)</p>
+	<p> Если вам не удалось загрузить прайс, обязательно напишите <a href='/send_mail'>нам</a>: мы поможем решить эту проблему. </p>
 	<% use PriceMap::DB::Contra::Manager; %>
 	<div> <%= select_field contra => PriceMap::DB::Contra::Manager->select_tag_data($user_id), id => "contra_sel"; %>
 	<br><label>Колонка с номенклатурой:</label><br><input id="nom_col" onBlur = "setNewParams();" />
