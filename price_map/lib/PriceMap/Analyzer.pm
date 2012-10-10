@@ -94,8 +94,8 @@ sub get_data {
     my $i = 0;
     #for my $href (@$arr)'
     my $total_records = scalar @$arr;
-    print "total rec=",$total_records;
-    print "nm_mask=", $nm_mask;
+   # print "total rec=",$total_records;
+    #print "nm_mask=", $nm_mask;
     #print "show_order =", $show_order;
     if ( $nm_mask ne "")
     {
@@ -121,7 +121,7 @@ sub get_data {
             for ( my $i = 0; $i <= $total_records ; $i++ )
             {
                 my $href = $arr->[$i];    
-                print "IN show order=================";
+               # print "IN show order=================";
                 if ($href->{count})
                 {
                     push $rows, $href;
@@ -137,7 +137,7 @@ sub get_data {
    # print Dumper $rows;
     my $total_pages = 10;
     my $records = scalar @$rows;
-    print "limit->", $limit;
+    #print "limit->", $limit;
     if( $limit ) 
     { 
         $total_pages = int((scalar @$rows)/($limit)) || 1; 
@@ -167,11 +167,35 @@ sub get_data {
 
 };
 
+sub trim {
+    my($string)=@_;
+    for ($string) {
+        s/^\s+//;
+        s/\s+$//;
+        }
+    return $string;
+    }
+
+sub get_digit {
+    my ($string) = @_;
+    for($string){
+        s/[^0-9.]//;
+    }
+    return $string;
+}
+
+sub get_filename {
+    my $filename = shift;
+    if ( $filename =~ m/.*\/(.*)/){
+        return $1;
+    }
+    return $filename;
+}
 sub parser_excel {
 
     my $self    = shift;
 
-    print "paser work!";
+  #  print "paser work!";
     my $filename    = shift; # имя файла, который будем парсить
     my $id_contra   = shift; #имя контрагента чей файл грузим, его тоже положим в данные
     my $nom_col     = shift ;
@@ -180,11 +204,16 @@ sub parser_excel {
     my $manuf_col   = shift;
     my $art_col     = shift;
     my $balance_col = shift;
+    my $course      = shift;
 
     my $contra = PriceMap::DB::Contra->new(id => $id_contra);
     if (!$contra->load( speculative=>1))
     {
-        $contra->name($id_contra);
+        if ($id_contra == -1)
+        {
+            $contra->name(get_filename($filename));
+        }
+        
         $contra->user_id($self->app->session->data('user_id'));
     }
     #print Dumper $contra->name;
@@ -194,7 +223,7 @@ sub parser_excel {
     my $oFmtR   = Spreadsheet::ParseExcel::FmtUnicode->new (Unicode_Map => "CP1251");
     
     my $oBook   = $oExcel->Parse($filename, $oFmtR);
-     print Dumper $oExcel;
+    # print Dumper $oExcel;
     # choice sheet
     my $oWks    = $oBook->{Worksheet}[0];
    # print Dumper $oBook;
@@ -242,7 +271,7 @@ sub parser_excel {
             {
                 next;
             }
-            my $val = decode('CP1251', $cur_val->Value);
+            my $val = decode('CP1251', trim($cur_val->Value));
             #print $val;
             if (!$headr_find && $cur_val)
             {
@@ -271,6 +300,13 @@ sub parser_excel {
                  #push $self->stash('price_map')->{$header_hash{$j}}, $cur_val->Value;
                 if (defined $header_hash{$j})
                 {
+                    #if (( $header_hash{$j} eq "price" ) && ($course != 1))
+                    if ( $header_hash{$j} eq "price" ) 
+                    {
+                        #if current column is price - multiply on course
+                        #print $j.'; '.$header_hash{$j};
+                        $val = get_digit($val)*$course;
+                    }
                     $cur_row->{$header_hash{$j}} = $val;
                 }
             }
@@ -293,7 +329,7 @@ sub parser_excel {
         if ($headr_find)
         {
             $cur_row->{id}  = $cur_id;
-            $cur_row->{contra} = $contra->name_utf;
+            $cur_row->{contra} = $contra->name_utf || $filename;
             $cur_row->{contra_id} = $contra->id;
             $cur_row->{count} = 0;
             push $my_data, $cur_row;
@@ -358,7 +394,7 @@ sub save_changes{
     my $my_data = $self->app->session->data('price_map');
 
     $my_data->[$POST->{id}]->{count} = $POST->{count};
-    print $my_data->[$POST->{id}];
+    #print $my_data->[$POST->{id}];
     #self->app->session->data('price_map', $my_data);
     $self->app->session->data('price_map', $my_data);
     $self->app->session->flush;    
@@ -391,6 +427,7 @@ sub upload {
     my $manuf_col = $self->req->query_params->to_hash->{manuf_col} || 0;
     my $art_col = $self->req->query_params->to_hash->{art_col} || 0;
     my $balance_col = $self->req->query_params->to_hash->{balance_col} || 0;
+    my $course      = $self->req->query_params->to_hash->{course} || 1;
 
 
     if (!$contra)
@@ -407,7 +444,7 @@ sub upload {
 
     # Image file
     my $full_path = "uploads/".$self->req->query_params->to_hash->{qqfile};
-	print $full_path;
+	#print $full_path;
 	#print $image->filename;
     open (CURFILE, ">$full_path") or die "Can't open/create file $full_path";
     #close (CURFILE);
@@ -415,7 +452,7 @@ sub upload {
     #my $image_file = $full_path; #"$IMAGE_BASE/" . $image->filename;
     
     close (CURFILE);
-    $self->parser_excel($full_path, $contra, $nom_col, $price_col, $first_row, $manuf_col, $art_col, $balance_col);
+    $self->parser_excel($full_path, $contra, $nom_col, $price_col, $first_row, $manuf_col, $art_col, $balance_col, $course);
 
 
     # Redirect to top page

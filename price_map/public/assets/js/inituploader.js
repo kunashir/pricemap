@@ -15,7 +15,8 @@ var uploader;
                   first_row: '',
                   manuf_col: '',
                   art_col: '', 
-                  balance_col: ''
+                  balance_col: '',
+                  course: 1
 	            },
 	            multiple: false,
 	            uploadButtonText: 'Загрузить файл',
@@ -30,7 +31,8 @@ var uploader;
 function setNewParams ()
 {
 	uploader.setParams( {contra: $("#contra_sel").val(), nom_col: $("#nom_col").val(), price_col: $("#price_col").val(), 
-                    first_row: $("#first_row").val(), manuf_col: $("#manuf_col").val(), art_col: $("#art_col").val(), balance_col:$("#balance_col").val() });
+                    first_row: $("#first_row").val(), manuf_col: $("#manuf_col").val(), art_col: $("#art_col").val(), balance_col:$("#balance_col").val(), 
+                    course:$("#course").val() });
 }
 
 function del_all()

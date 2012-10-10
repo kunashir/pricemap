@@ -44,7 +44,7 @@
 	  	   	<nav class = "round">
 	  	   		<ul>
 	  			
-	  			<li><%= link_to 'Связь и поддрежка' => 'send_mail' %></li>
+	  			<li><%= link_to 'Связь и поддержка' => 'send_mail' %></li>
 	  			<% if (is_login ) { %>
 	  				<li><%= link_to 'Поставщики' => 'contra_index' %></li>
 	  				<li><%= link_to 'Загрузка прайсов' => 'upload_form'%></li>
@@ -69,7 +69,7 @@
 		<footer>
 			<nav class="round">
 			<ul>
-				<li><%= link_to 'Связь и поддрежка' => 'send_mail' %></li>
+				<li><%= link_to 'Связь и поддержка' => 'send_mail' %></li>
 				<li><%= link_to 'Сервис для аптек' => 'http://apteka-s.ru' %></li>
 			</ul>
 			</nav>

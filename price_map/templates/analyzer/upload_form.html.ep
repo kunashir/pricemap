@@ -9,6 +9,7 @@
 	<p> Если вам не удалось загрузить прайс, обязательно напишите <a href='/send_mail'>нам</a>: мы поможем решить эту проблему. </p>
 	<% use PriceMap::DB::Contra::Manager; %>
 	<div> <%= select_field contra => PriceMap::DB::Contra::Manager->select_tag_data($user_id), id => "contra_sel"; %>
+	<br><label>Курс:</label><br><input id="course" onBlur = "setNewParams();" value=1 />
 	<br><label>Колонка с номенклатурой:</label><br><input id="nom_col" onBlur = "setNewParams();" />
 	<br><label>Колонка с ценой:</label><br><input id="price_col" onBlur = "setNewParams();" />
 	<br><label>Первая строка:</label><br><input  id="first_row" onBlur = "setNewParams();" /> 	
