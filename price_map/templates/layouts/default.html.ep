@@ -61,7 +61,7 @@
 	  		</nav>
 	  	</header>
 	  	<% if (my $message = flash 'message' ) { %>
-    		<b> <%= $message %></b><br>
+    		<div align="center"><b class="flash error" > <%= $message %></b><br></div>
 		<% } %>
 	  	<section class="round">
 			<%= content %>

@@ -93,6 +93,14 @@ sub  login {
 sub is_login {
     my $self = shift;
     print "USER_ID in check:".$self->app->session->data('user_id');
-    $self->app->session->data('user_id') ? 1 :  $self->redirect_to('/login_form'); 
+    if ($self->app->session->data('user_id'))
+    {
+        return 1;
+    }
+    else
+    {
+        $self->flash( message => 'Войдите для доступа к данной функции!' ); 
+        $self->redirect_to('/login_form');
+    } 
 }
 1;
