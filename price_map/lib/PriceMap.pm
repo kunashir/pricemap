@@ -99,8 +99,7 @@ sub startup {
     encoding => 'base64',
     type     => 'text/html',
     how      => 'smtp',
-    #howargs  => [ 'srv-mail', AuthUser=>'robot', AuthPass => 'hl7kx4v']
-    howargs  => [ 'smtp.yandex.ru', AuthUser=>'korolev@apteka-s.ru', AuthPass => 'futurama']
+    howargs  => [ 'smtp.yandex.ru', AuthUser=>'korolev@apteka-s.ru', AuthPass => '??????']
   };
   $self->plugin(mail => $conf);
 
